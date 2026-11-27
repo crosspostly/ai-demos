@@ -1,30 +1,84 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Разбор почерка по фото — демо</title><style>
-body{margin:0;font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f5f3ef;color:#222}
-.w{max-width:560px;margin:0 auto;padding:16px} .tag{display:inline-block;background:#222;color:#fff;border-radius:6px;padding:2px 8px;font-size:12px}
-h1{font-size:24px;margin:10px 0 4px} .total{font-size:56px;font-weight:800;margin:6px 0} .total small{font-size:18px;color:#777}
-img,video{width:100%;border-radius:12px;box-shadow:0 2px 10px #0002;background:#fff}
-.m{background:#fff;border-radius:12px;padding:12px 14px;margin:10px 0} .mh{display:flex;justify-content:space-between;font-size:17px}
-.mh span{font-weight:800} .bar{height:8px;background:#eee;border-radius:4px;margin:8px 0} .bar i{display:block;height:100%;border-radius:4px}
-p{margin:6px 0} small{color:#777} ol{padding-left:20px} li{background:#fff;border-radius:12px;padding:10px;margin:8px 0}
-.cta{display:block;text-align:center;background:#2e6be6;color:#fff;font-weight:700;font-size:18px;padding:16px;border-radius:14px;text-decoration:none;margin:18px 0}
-.note{font-size:12px;color:#888}</style></head><body><div class="w">
-<span class="tag">демо</span><h1>Ваш разбор почерка</h1>
-<div class="total">81<small> / 100 — общая аккуратность</small></div>
-<img src="annotated.jpg" alt="разметка почерка">
-<p class="note">Зелёные/красные линии — линия строки, стрелки — наклон штрихов, внизу — примеры одинаковых букв, гистограмма — распределение наклона.</p>
-<h2>9 измеримых параметров</h2><div class="m"><div class="mh"><b>Ровность наклона</b><span style="color:#2e9d4f">77</span></div>
-<div class="bar"><i style="width:77%;background:#2e9d4f"></i></div><p>Буквы смотрят в одну сторону — наклон держится стабильно.</p><small>Разброс наклона вертикальных штрихов ±6° (средний наклон +11°).</small></div><div class="m"><div class="mh"><b>Параллельность штрихов</b><span style="color:#2e9d4f">85</span></div>
-<div class="bar"><i style="width:85%;background:#2e9d4f"></i></div><p>Наклонные штрихи почти параллельны — палочки, петли и соединители держат один угол.</p><small>В пределах ±3° от среднего угла идут 27% штрихов, межквартильный разброс 11° (штрихов: 89, средний наклон +26°).</small></div><div class="m"><div class="mh"><b>Одинаковая высота букв</b><span style="color:#e08a1e">60</span></div>
-<div class="bar"><i style="width:60%;background:#e08a1e"></i></div><p>Есть буквы заметно выше или ниже соседних.</p><small>Высота строчных (x-высота) ≈ 34 px, разброс 39%.</small></div><div class="m"><div class="mh"><b>Однообразие букв</b><span style="color:#e08a1e">55</span></div>
-<div class="bar"><i style="width:55%;background:#e08a1e"></i></div><p>Одна и та же буква местами пишется по-разному: то шире, то уже, то с петлёй, то без.</p><small>Повторяющиеся буквы и их части: групп 13, экземпляров 92, совпадение форм 0.64 из 1.</small></div><div class="m"><div class="mh"><b>Держит строку</b><span style="color:#2e9d4f">93</span></div>
-<div class="bar"><i style="width:93%;background:#2e9d4f"></i></div><p>Слова стоят на одной линии, строки не уползают.</p><small>Отклонение букв от линии строки 18% высоты буквы, увод строки 0.3× высоты.</small></div><div class="m"><div class="mh"><b>Ровные пробелы</b><span style="color:#2e9d4f">98</span></div>
-<div class="bar"><i style="width:98%;background:#2e9d4f"></i></div><p>Пробелы между словами одинаковые — текст легко читать.</p><small>Средний пробел между словами 1.1× высоты буквы, разброс 31%.</small></div><div class="m"><div class="mh"><b>Межстрочный интервал</b><span style="color:#2e9d4f">87</span></div>
-<div class="bar"><i style="width:87%;background:#2e9d4f"></i></div><p>Строки идут ровными «рельсами».</p><small>Расстояние между строками ≈ 2.0× высоты буквы, разброс 15%.</small></div><div class="m"><div class="mh"><b>Ровный нажим</b><span style="color:#2e9d4f">91</span></div>
-<div class="bar"><i style="width:91%;background:#2e9d4f"></i></div><p>Толщина линии стабильная — рука движется ровно.</p><small>Оценка по толщине линии на фото: разброс 16%.</small></div><div class="m"><div class="mh"><b>Чёткость форм</b><span style="color:#2e9d4f">85</span></div>
-<div class="bar"><i style="width:85%;background:#2e9d4f"></i></div><p>Элементы букв одинаковые и отдельные — читается легко.</p><small>Регулярность элементов письма (разброс размеров 40%, слипшихся участков 0.0%).</small></div>
-<h2>3 упражнения для вас</h2><ol><li><b>Буква-эталон 20 раз</b> <em>(Однообразие букв)</em><br>Выберите букву, которая сильнее всего «гуляет», и напишите её 20 раз в строку, равняясь на эталон, выведенный первым. Наложите на строку кальку, обведите лучший экземпляр — и следующие 3 строки пишите, подкладывая кальку под лист.</li><li><b>Письмо в 5 мм и «лесенка»</b> <em>(Одинаковая высота букв)</em><br>Пишите слова «мама», «лимон», «сон» между двумя вспомогательными линиями высотой 5 мм — по строке на слово, касаясь обеих линий. В конце — «лесенка»: буква «и» высотой 3, 4, 5, 6 и 7 мм, по 3 раза на каждую ступеньку.</li><li><b>Косая штриховка 65°</b> <em>(Ровность наклона)</em><br>В клетчатой тетради заштрихуйте 10 клеток подряд косой линией под 65° — от нижнего левого угла к верхнему правому, не отрывая карандаш. Затем 2 строки «иши» так, чтобы каждая палочка шла под тем же углом.</li></ol>
+:root{--paper:#f6f1e6;--card:#fffdf7;--ink:#221e18;--muted:#7a7166;--rust:#a8502f;--line:#e2d8c6}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:var(--paper);color:var(--ink)}
+.w{max-width:600px;margin:0 auto;padding:22px 18px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.tag{background:var(--ink);color:#fff;border-radius:4px;padding:3px 8px;letter-spacing:.12em}
+h1{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:26px 0 6px}
+.verdict{display:flex;gap:16px;align-items:flex-start;margin:0 0 18px}
+.score{font-size:60px;font-weight:800;line-height:.9;letter-spacing:-.03em;white-space:nowrap}
+.score span{font-size:20px;font-weight:500;color:var(--muted);letter-spacing:0}
+.lead{font-size:18px;line-height:1.35;margin:4px 0 0}
+.lead b{color:var(--rust)}
+.shot{border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 8px 24px #3a2f1e18;border:1px solid var(--line)}
+img,video{width:100%;display:block}
+.cap{font-size:12px;line-height:1.45;color:var(--muted);margin:8px 2px 0}
+h2{font-size:22px;line-height:1.2;margin:30px 0 4px;letter-spacing:-.01em}
+.hint{font-size:13px;color:var(--muted);margin:0 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
+.chip{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 13px;cursor:pointer}
+.chip small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.on small{color:#cfc6b6}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0;display:flex;gap:12px}
+.ex .n{font-size:12px;font-weight:800;color:var(--rust);padding-top:3px;min-width:14px}
+.ex b{font-size:16px}
+.ex em{font-style:normal;font-size:12px;color:var(--muted);display:block;margin:2px 0 6px}
+.ex p{margin:0;font-size:14px;line-height:1.45}
+.m{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin:8px 0;transition:opacity .25s}
+.m.dim{opacity:.4}
+.mh{display:flex;justify-content:space-between;font-size:15px}
+.mh b{font-weight:600}.mh span{font-weight:800}
+.bar{height:5px;background:#eee4d3;border-radius:3px;margin:7px 0 6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px}
+.m p{margin:0;font-size:13px;line-height:1.4}
+.m small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.share{background:#efe6d5;border-radius:16px;padding:16px 16px 14px;margin:26px 0 0}
+.share b{font-size:17px}.share p{font-size:13px;color:#5f574b;margin:4px 0 12px}
+.share a{display:block;text-align:center;text-decoration:none;font-weight:700;font-size:15px;border-radius:11px;padding:13px;margin-top:8px}
+.vk{background:#2b6bd6;color:#fff}
+.ghost{background:transparent;color:var(--ink);border:1px solid #c9bda8}
+.cta{display:block;text-align:center;background:var(--rust);color:#fff;font-weight:700;font-size:16px;padding:15px;border-radius:12px;text-decoration:none;margin:16px 0 0}
+.note{font-size:11px;line-height:1.5;color:var(--muted);margin-top:22px}
+</style></head><body><div class="w">
+<div class="top"><span class="tag">демо</span><span>разбор по фото</span></div>
+<h1>Разбор почерка</h1>
+<div class="verdict"><div class="score">81<span>/100</span></div>
+<p class="lead">Главное — <b>одна и та же буква каждый раз другая</b>. Почерк в целом читается — работать есть над чем точечно.</p></div>
+<div class="shot"><img src="annotated.jpg" alt="разметка почерка"></div>
+<p class="cap">Пометки на фото: линия строки, наклон штрихов, примеры одинаковых букв. Внизу — как распределён наклон.</p>
+<h2>Что важнее исправить?</h2>
+<p class="hint">Выберите фокус — упражнения и подсветка параметров поменяются.</p>
+<div class="chips" id="focus"><button class="chip on" data-f="auto">Как есть<small>три слабых места</small></button><button class="chip" data-f="slant">Ровный наклон<small>буквы под одним углом</small></button><button class="chip" data-f="size">Одинаковые буквы<small>буква всегда одной формы</small></button><button class="chip" data-f="spacing">Аккуратные пробелы<small>слова не слипаются</small></button><button class="chip" data-f="baseline">Ровная строка<small>буквы стоят на линии</small></button></div>
+<h2 id="exh">Упражнения под ваш фокус</h2>
+<div id="exs"></div>
+<h2>Все параметры разбора</h2>
+<div class="m" data-metric="slant"><div class="mh"><b>Ровность наклона</b><span style="color:#3d7a52">77</span></div><div class="bar"><i style="width:77%;background:#3d7a52"></i></div><p>Буквы смотрят в одну сторону — наклон держится стабильно.</p><small>Разброс наклона вертикальных штрихов ±6° (средний наклон +11°).</small></div><div class="m" data-metric="parallel"><div class="mh"><b>Параллельность штрихов</b><span style="color:#3d7a52">85</span></div><div class="bar"><i style="width:85%;background:#3d7a52"></i></div><p>Наклонные штрихи почти параллельны — палочки, петли и соединители держат один угол.</p><small>В пределах ±3° от среднего угла идут 27% штрихов, межквартильный разброс 11° (штрихов: 89, средний наклон +26°).</small></div><div class="m" data-metric="size"><div class="mh"><b>Одинаковая высота букв</b><span style="color:#b07d2b">60</span></div><div class="bar"><i style="width:60%;background:#b07d2b"></i></div><p>Есть буквы заметно выше или ниже соседних.</p><small>Высота строчных (x-высота) ≈ 34 px, разброс 39%.</small></div><div class="m" data-metric="glyphs"><div class="mh"><b>Однообразие букв</b><span style="color:#b07d2b">55</span></div><div class="bar"><i style="width:55%;background:#b07d2b"></i></div><p>Одна и та же буква местами пишется по-разному: то шире, то уже, то с петлёй, то без.</p><small>Повторяющиеся буквы и их части: групп 13, экземпляров 92, совпадение форм 0.64 из 1.</small></div><div class="m" data-metric="baseline"><div class="mh"><b>Держит строку</b><span style="color:#3d7a52">93</span></div><div class="bar"><i style="width:93%;background:#3d7a52"></i></div><p>Слова стоят на одной линии, строки не уползают.</p><small>Отклонение букв от линии строки 18% высоты буквы, увод строки 0.3× высоты.</small></div><div class="m" data-metric="spacing"><div class="mh"><b>Ровные пробелы</b><span style="color:#3d7a52">98</span></div><div class="bar"><i style="width:98%;background:#3d7a52"></i></div><p>Пробелы между словами одинаковые — текст легко читать.</p><small>Средний пробел между словами 1.1× высоты буквы, разброс 31%.</small></div><div class="m" data-metric="lines"><div class="mh"><b>Межстрочный интервал</b><span style="color:#3d7a52">87</span></div><div class="bar"><i style="width:87%;background:#3d7a52"></i></div><p>Строки идут ровными «рельсами».</p><small>Расстояние между строками ≈ 2.0× высоты буквы, разброс 15%.</small></div><div class="m" data-metric="pressure"><div class="mh"><b>Ровный нажим</b><span style="color:#3d7a52">91</span></div><div class="bar"><i style="width:91%;background:#3d7a52"></i></div><p>Толщина линии стабильная — рука движется ровно.</p><small>Оценка по толщине линии на фото: разброс 16%.</small></div><div class="m" data-metric="legibility"><div class="mh"><b>Чёткость форм</b><span style="color:#3d7a52">85</span></div><div class="bar"><i style="width:85%;background:#3d7a52"></i></div><p>Элементы букв одинаковые и отдельные — читается легко.</p><small>Регулярность элементов письма (разброс размеров 40%, слипшихся участков 0.0%).</small></div>
+<div class="share"><b>Поделиться разбором</b>
+<p>Карточка 1080×1350 с результатом и QR-кодом — для стены ВК. Родитель делится, друзья видят вас.</p>
+<a class="vk" href="https://vk.com/share.php?url=https%3A%2F%2Fcrosspostly.github.io%2Fai-demos%2Fhandwriting%2F&title=%D0%A0%D0%B0%D0%B7%D0%B1%D0%BE%D1%80%20%D0%BF%D0%BE%D1%87%D0%B5%D1%80%D0%BA%D0%B0%20%D0%BF%D0%BE%20%D1%84%D0%BE%D1%82%D0%BE" target="_blank" rel="noopener">Поделиться во ВКонтакте</a>
+<a class="ghost" href="share-card.png" download>Скачать карточку 1080×1350</a>
+</div>
 <a class="cta" href="#" onclick="alert('Здесь будет запись к тренеру (демо)');return false">Записаться на разбор к тренеру</a>
 <h2>Видео-итог</h2><video src="summary.mp4" controls playsinline muted preload="metadata"></video>
-<p class="note">Автоматическая оценка по геометрии письма на фото (наклон, параллельность штрихов, высота, однообразие букв, строка, пробелы, интервал, толщина линии, чёткость). Это не графология и не оценка личности; результат зависит от качества снимка. Точный разбор — у тренера.</p>
-</div></body></html>
+<p class="note">Автоматическая оценка по геометрии письма на фото (наклон, параллельность штрихов, высота, однообразие букв, строка, пробелы, интервал, толщина линии, чёткость). Это не графология и не оценка личности, это скрининг, а не диагноз; результат зависит от качества снимка. Точный разбор — у тренера.</p>
+</div><script>
+var SETS={"auto": [{"drill": "FM1", "title": "«Буква-эталон»", "text": "Выберите букву, которая сильнее всего «гуляет», напишите её один раз крупно — это эталон. Дальше пишите её же 20 раз в строку, сверяясь с эталоном после каждой буквы.", "for_metric": "Однообразие букв", "metric": "glyphs", "score": 55}, {"drill": "SZ1", "title": "«Три линейки»", "text": "Пишите слова «мама», «лимон», «сон» между двумя вспомогательными линиями высотой 5 мм — по строке на слово, касаясь обеих линий. Буквы должны заполнять просвет целиком.", "for_metric": "Одинаковая высота букв", "metric": "size", "score": 60}, {"drill": "SL3", "title": "Штриховка под наклон", "text": "Заштрихуйте квадрат 10×10 см наклонной линией через каждые 2 мм — без линейки, от руки. Первая линия задаёт угол, остальные идут строго параллельно ей.", "for_metric": "Ровность наклона", "metric": "slant", "score": 77}], "slant": [{"drill": "SL3", "title": "Штриховка под наклон", "text": "Заштрихуйте квадрат 10×10 см наклонной линией через каждые 2 мм — без линейки, от руки. Первая линия задаёт угол, остальные идут строго параллельно ей.", "for_metric": "Ровность наклона", "metric": "slant", "score": 77}, {"drill": "SL1", "title": "«Рельсы»", "text": "Проведите 10 наклонных линий через три опорные точки под одним углом и пишите элементы прямо по ним: «шшш», «иии», «ппп». Палочки не должны вылезать из своих рельсов.", "for_metric": "Ровность наклона", "metric": "slant", "score": 77}, {"drill": "SL2", "title": "«Заборчик»", "text": "Между двумя линиями нарисуйте ряд наклонных палочек через 3 мм — все под углом первой, 4 ряда по 15 штук. Потом напишите «шишел» между теми же линиями: просветы и наклон не меняются.", "for_metric": "Параллельность штрихов", "metric": "parallel", "score": 85}], "size": [{"drill": "FM1", "title": "«Буква-эталон»", "text": "Выберите букву, которая сильнее всего «гуляет», напишите её один раз крупно — это эталон. Дальше пишите её же 20 раз в строку, сверяясь с эталоном после каждой буквы.", "for_metric": "Однообразие букв", "metric": "glyphs", "score": 55}, {"drill": "FM2", "title": "Калька на букву", "text": "Обведите лучший экземпляр буквы через кальку, подложите кальку под лист и напишите ещё три строки — контур должен совпадать с формой эталона.", "for_metric": "Однообразие букв", "metric": "glyphs", "score": 55}, {"drill": "SZ1", "title": "«Три линейки»", "text": "Пишите слова «мама», «лимон», «сон» между двумя вспомогательными линиями высотой 5 мм — по строке на слово, касаясь обеих линий. Буквы должны заполнять просвет целиком.", "for_metric": "Одинаковая высота букв", "metric": "size", "score": 60}], "spacing": [{"drill": "LN1", "title": "«Через строку»", "text": "Пишите только через строку, не задевая соседнюю: хвосты и петли не должны касаться нижней строки. Одна страница любого текста.", "for_metric": "Межстрочный интервал", "metric": "lines", "score": 87}, {"drill": "LN3", "title": "«Рамка строки»", "text": "Обведите каждую строку сверху и снизу и пишите строго внутри рамки. Пять строк — так видно, где интервал начинает гулять.", "for_metric": "Межстрочный интервал", "metric": "lines", "score": 87}, {"drill": "WS1", "title": "«Пробел-пальчик»", "text": "После каждого слова прикладывайте к листу указательный палец — пробел шириной с палец. Пять строк «мама мыла раму», палец каждый раз на новое место.", "for_metric": "Ровные пробелы", "metric": "spacing", "score": 98}], "baseline": [{"drill": "LN1", "title": "«Через строку»", "text": "Пишите только через строку, не задевая соседнюю: хвосты и петли не должны касаться нижней строки. Одна страница любого текста.", "for_metric": "Межстрочный интервал", "metric": "lines", "score": 87}, {"drill": "LN3", "title": "«Рамка строки»", "text": "Обведите каждую строку сверху и снизу и пишите строго внутри рамки. Пять строк — так видно, где интервал начинает гулять.", "for_metric": "Межстрочный интервал", "metric": "lines", "score": 87}, {"drill": "BL1", "title": "«Опора на линию»", "text": "Каждая буква касается нижней линии строки — ни выше, ни ниже. Пять строк одного текста, в конце каждой строки проверьте низ букв линейкой.", "for_metric": "Держит строку", "metric": "baseline", "score": 93}]}, FOCUS={"auto": {"id": "auto", "label": "Главное за меня", "hint": "три самых слабых места", "metrics": null}, "slant": {"id": "slant", "label": "Ровный наклон", "hint": "буквы под одним углом", "metrics": ["slant", "parallel"]}, "size": {"id": "size", "label": "Одинаковые буквы", "hint": "буква всегда одной формы", "metrics": ["size", "glyphs"]}, "spacing": {"id": "spacing", "label": "Аккуратные пробелы", "hint": "слова не слипаются", "metrics": ["spacing", "lines"]}, "baseline": {"id": "baseline", "label": "Ровная строка", "hint": "буквы стоят на линии", "metrics": ["baseline", "lines"]}}, cur="auto";
+function render(f){
+  cur=f;
+  document.querySelectorAll('#focus .chip').forEach(function(b){b.classList.toggle('on',b.dataset.f===f)});
+  var exs=SETS[f]||[], box=document.getElementById('exs'), h='';
+  for(var i=0;i<exs.length;i++){var e=exs[i];
+    var note=e.score>=75 ? 'сильный параметр — упражнение на поддержку' : 'для параметра «'+e.for_metric+'» — сейчас '+e.score+' из 100';
+    h+='<div class="ex"><div class="n">'+(i+1)+'</div><div><b>'+e.title+'</b><em>'+note+'</em><p>'+e.text+'</p></div></div>';}
+  box.innerHTML=h;
+  var want=(FOCUS[f]||{}).metrics||null;
+  document.querySelectorAll('.m').forEach(function(m){
+    var on=!want||want.indexOf(m.dataset.metric)>-1; m.classList.toggle('dim',!on);});
+  document.getElementById('exh').textContent = f==='auto' ? 'Упражнения под самые слабые места' : 'Упражнения: '+FOCUS[f].label.toLowerCase();
+}
+document.querySelectorAll('#focus .chip').forEach(function(b){b.onclick=function(){render(b.dataset.f)}});
+render(cur);
+</script></body></html>
