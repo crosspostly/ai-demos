@@ -218,6 +218,14 @@
     return sd / mean;
   }
 
+  // Один случайный шум, точка или фрагмент линовки не должен обнулять метрику.
+  function robustCoefficient(arr) {
+    if (arr.length < 6) return coefficient(arr);
+    const s = arr.slice().sort((a, b) => a - b);
+    const cut = Math.max(1, Math.floor(s.length * 0.1));
+    return coefficient(s.slice(cut, s.length - cut));
+  }
+
   function rowComponents(comps, row) {
     const pad = Math.max(2, (row.bottom - row.top) * 0.35);
     return comps.filter(c => c.cy >= row.top - pad && c.cy <= row.bottom + pad)
@@ -324,20 +332,20 @@
         if (gap > Math.max(2, meanH * 0.35) && gap < meanH * 5) rowGaps.push(gap);
       }
     }
-    const gapCv = coefficient(rowGaps);
+    const gapCv = robustCoefficient(rowGaps);
     const lineGapValues = [];
     for (let i = 1; i < lines.length; i++) lineGapValues.push(lines[i].b - lines[i - 1].b);
-    const lineGapCv = coefficient(lineGapValues);
+    const lineGapCv = robustCoefficient(lineGapValues);
     const fillValues = core.map(c => c.n / Math.max(1, c.w * c.h));
-    const fillCv = coefficient(fillValues);
+    const fillCv = robustCoefficient(fillValues);
     const shapeValues = core.map(c => c.w / Math.max(1, c.h));
-    const shapeCv = coefficient(shapeValues);
+    const shapeCv = robustCoefficient(shapeValues);
 
     const sParallel = Math.max(0, Math.min(100, 100 - Math.max(0, slantDev - 1.5) * 7.2));
     const sSpacing = Math.max(0, Math.min(100, 100 - Math.max(0, gapCv - 0.22) * 85));
     const sLines = Math.max(0, Math.min(100, 100 - Math.max(0, lineGapCv - 0.08) * 170));
-    const sPressure = Math.max(0, Math.min(100, 100 - Math.max(0, fillCv - 0.2) * 125));
-    const sGlyphs = Math.max(0, Math.min(100, 100 - Math.max(0, shapeCv - 0.3) * 110));
+    const sPressure = Math.max(20, Math.min(100, 100 - Math.max(0, fillCv - 0.2) * 125));
+    const sGlyphs = Math.max(20, Math.min(100, 100 - Math.max(0, shapeCv - 0.3) * 110));
     const sClarity = Math.max(0, Math.min(100, sGlyphs * 0.55 + sPressure * 0.25 + (100 - Math.min(100, wobbleXh * 300)) * 0.2));
 
     // счёт 0..100
