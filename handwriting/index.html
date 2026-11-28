@@ -1,84 +1,249 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Разбор почерка по фото — демо</title><style>
-:root{--paper:#f6f1e6;--card:#fffdf7;--ink:#221e18;--muted:#7a7166;--rust:#a8502f;--line:#e2d8c6}
-*{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:var(--paper);color:var(--ink)}
-.w{max-width:600px;margin:0 auto;padding:22px 18px 40px}
-.top{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.tag{background:var(--ink);color:#fff;border-radius:4px;padding:3px 8px;letter-spacing:.12em}
-h1{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:26px 0 6px}
-.verdict{display:flex;gap:16px;align-items:flex-start;margin:0 0 18px}
-.score{font-size:60px;font-weight:800;line-height:.9;letter-spacing:-.03em;white-space:nowrap}
-.score span{font-size:20px;font-weight:500;color:var(--muted);letter-spacing:0}
-.lead{font-size:18px;line-height:1.35;margin:4px 0 0}
-.lead b{color:var(--rust)}
-.shot{border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 8px 24px #3a2f1e18;border:1px solid var(--line)}
-img,video{width:100%;display:block}
-.cap{font-size:12px;line-height:1.45;color:var(--muted);margin:8px 2px 0}
-h2{font-size:22px;line-height:1.2;margin:30px 0 4px;letter-spacing:-.01em}
-.hint{font-size:13px;color:var(--muted);margin:0 0 12px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
-.chip{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 13px;cursor:pointer}
-.chip small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
-.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.chip.on small{color:#cfc6b6}
-.ex{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0;display:flex;gap:12px}
-.ex .n{font-size:12px;font-weight:800;color:var(--rust);padding-top:3px;min-width:14px}
-.ex b{font-size:16px}
-.ex em{font-style:normal;font-size:12px;color:var(--muted);display:block;margin:2px 0 6px}
-.ex p{margin:0;font-size:14px;line-height:1.45}
-.m{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin:8px 0;transition:opacity .25s}
-.m.dim{opacity:.4}
-.mh{display:flex;justify-content:space-between;font-size:15px}
-.mh b{font-weight:600}.mh span{font-weight:800}
-.bar{height:5px;background:#eee4d3;border-radius:3px;margin:7px 0 6px;overflow:hidden}
-.bar i{display:block;height:100%;border-radius:3px}
-.m p{margin:0;font-size:13px;line-height:1.4}
-.m small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
-.share{background:#efe6d5;border-radius:16px;padding:16px 16px 14px;margin:26px 0 0}
-.share b{font-size:17px}.share p{font-size:13px;color:#5f574b;margin:4px 0 12px}
-.share a{display:block;text-align:center;text-decoration:none;font-weight:700;font-size:15px;border-radius:11px;padding:13px;margin-top:8px}
-.vk{background:#2b6bd6;color:#fff}
-.ghost{background:transparent;color:var(--ink);border:1px solid #c9bda8}
-.cta{display:block;text-align:center;background:var(--rust);color:#fff;font-weight:700;font-size:16px;padding:15px;border-radius:12px;text-decoration:none;margin:16px 0 0}
-.note{font-size:11px;line-height:1.5;color:var(--muted);margin-top:22px}
-</style></head><body><div class="w">
-<div class="top"><span class="tag">демо</span><span>разбор по фото</span></div>
-<h1>Разбор почерка</h1>
-<div class="verdict"><div class="score">80<span>/100</span></div>
-<p class="lead">Главное — <b>слова слипаются или разлетаются</b>. Почерк в целом читается — работать есть над чем точечно.</p></div>
-<div class="shot"><img src="annotated.jpg" alt="разметка почерка"></div>
-<p class="cap">Пометки на фото: линия строки, наклон штрихов, примеры одинаковых букв. Внизу — как распределён наклон.</p>
-<h2>Что важнее исправить?</h2>
-<p class="hint">Выберите фокус — упражнения и подсветка параметров поменяются.</p>
-<div class="chips" id="focus"><button class="chip on" data-f="auto">Как есть<small>три слабых места</small></button><button class="chip" data-f="slant">Ровный наклон<small>буквы под одним углом</small></button><button class="chip" data-f="size">Одинаковые буквы<small>буква всегда одной формы</small></button><button class="chip" data-f="spacing">Аккуратные пробелы<small>слова не слипаются</small></button><button class="chip" data-f="baseline">Ровная строка<small>буквы стоят на линии</small></button></div>
-<h2 id="exh">Упражнения под ваш фокус</h2>
-<div id="exs"></div>
-<h2>Все параметры разбора</h2>
-<div class="m" data-metric="slant"><div class="mh"><b>Ровность наклона</b><span style="color:#3d7a52">82</span></div><div class="bar"><i style="width:82%;background:#3d7a52"></i></div><p>Буквы смотрят в одну сторону — наклон держится стабильно.</p><small>Разброс наклона вертикальных штрихов ±6° (средний наклон +11°).</small></div><div class="m" data-metric="parallel"><div class="mh"><b>Параллельность штрихов</b><span style="color:#3d7a52">77</span></div><div class="bar"><i style="width:77%;background:#3d7a52"></i></div><p>Наклонные штрихи почти параллельны — палочки, петли и соединители держат один угол.</p><small>В пределах ±3° от среднего угла идут 25% штрихов, межквартильный разброс 13° (штрихов: 79, средний наклон +24°).</small></div><div class="m" data-metric="size"><div class="mh"><b>Одинаковая высота букв</b><span style="color:#b07d2b">72</span></div><div class="bar"><i style="width:72%;background:#b07d2b"></i></div><p>Есть буквы заметно выше или ниже соседних.</p><small>Высота строчных (x-высота) ≈ 44 px, разброс 34%.</small></div><div class="m" data-metric="glyphs"><div class="mh"><b>Одну букву пишет одинаково</b><span style="color:#b07d2b">64</span></div><div class="bar"><i style="width:64%;background:#b07d2b"></i></div><p>Одну и ту же букву ребёнок пишет по-разному: то шире, то уже, то с петлёй, то без — текст выглядит неровным.</p><small>Повторяющиеся буквы и их части: групп 16, экземпляров 96, совпадение форм 0.66 из 1.</small></div><div class="m" data-metric="baseline"><div class="mh"><b>Держит строку</b><span style="color:#3d7a52">87</span></div><div class="bar"><i style="width:87%;background:#3d7a52"></i></div><p>Слова стоят на одной линии, строки не уползают.</p><small>Отклонение букв от линии строки 19% высоты буквы, увод строки 0.5× высоты.</small></div><div class="m" data-metric="spacing"><div class="mh"><b>Ровные пробелы</b><span style="color:#b07d2b">53</span></div><div class="bar"><i style="width:53%;background:#b07d2b"></i></div><p>Пробелы то широкие, то узкие — слова иногда сливаются.</p><small>Средний пробел между словами 1.0× высоты буквы, разброс 64%.</small></div><div class="m" data-metric="lines"><div class="mh"><b>Межстрочный интервал</b><span style="color:#3d7a52">98</span></div><div class="bar"><i style="width:98%;background:#3d7a52"></i></div><p>Строки идут ровными «рельсами».</p><small>Расстояние между строками ≈ 2.1× высоты буквы, разброс 7%.</small></div><div class="m" data-metric="pressure"><div class="mh"><b>Ровный нажим</b><span style="color:#3d7a52">98</span></div><div class="bar"><i style="width:98%;background:#3d7a52"></i></div><p>Толщина линии стабильная — рука движется ровно.</p><small>Оценка по толщине линии на фото: разброс 14%.</small></div><div class="m" data-metric="legibility"><div class="mh"><b>Чёткость форм</b><span style="color:#3d7a52">92</span></div><div class="bar"><i style="width:92%;background:#3d7a52"></i></div><p>Элементы букв одинаковые и отдельные — читается легко.</p><small>Регулярность элементов письма (разброс размеров 39%, слипшихся участков 0.0%).</small></div>
-<div class="share"><b>Поделиться разбором</b>
-<p>Карточка 1080×1350 с результатом и QR-кодом — для стены ВК. Родитель делится, друзья видят вас.</p>
-<a class="vk" href="https://vk.com/share.php?url=https%3A%2F%2Fcrosspostly.github.io%2Fai-demos%2Fhandwriting%2F&title=%D0%A0%D0%B0%D0%B7%D0%B1%D0%BE%D1%80%20%D0%BF%D0%BE%D1%87%D0%B5%D1%80%D0%BA%D0%B0%20%D0%BF%D0%BE%20%D1%84%D0%BE%D1%82%D0%BE" target="_blank" rel="noopener">Поделиться во ВКонтакте</a>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Разбор почерка ребёнка по фото за 2 минуты</title>
+<meta name="description" content="Покажем три наблюдения по странице тетради и дадим короткий план занятий на 7 дней. Фото остаётся в браузере.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+  :root{--ink:#18211d;--muted:#66736d;--line:#dfe8e1;--bg:#f7faf7;--card:#fff;--accent:#176b55;--accent2:#e6f3ed;--warn:#8a5a00;--soft:#f2f6f2;--danger:#a54135}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  .wrap{max-width:620px;margin:0 auto;padding:22px 18px 56px}
+  h1{font-size:31px;line-height:1.14;margin:16px 0 12px;letter-spacing:-.03em}
+  h2{font-size:21px;line-height:1.25;margin:34px 0 12px;letter-spacing:-.015em}
+  h3{font-size:17px;line-height:1.3;margin:0 0 6px}
+  p{margin:0 0 12px}.sub{color:var(--muted);font-size:17px}.tiny{font-size:13px;color:var(--muted)}
+  .badge{display:inline-block;background:var(--accent2);color:var(--accent);font-size:13px;font-weight:700;padding:5px 10px;border-radius:100px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;margin:14px 0;box-shadow:0 6px 22px rgba(23,61,43,.04)}
+  .btn{display:block;width:100%;border:0;border-radius:14px;background:var(--accent);color:#fff;font-size:17px;font-weight:700;padding:15px;text-align:center;cursor:pointer;transition:transform .15s ease,opacity .15s ease}
+  .btn:active{transform:translateY(1px)}.btn:disabled{opacity:.5;cursor:default}.btn.ghost{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
+  .drop{display:block;border:1.5px dashed #a8c7b5;border-radius:16px;padding:24px 16px;text-align:center;background:#fbfffc;cursor:pointer}.drop:hover{background:#f5fbf7}.drop input{display:none}
+  .drop-title{font-weight:700;margin:5px 0 4px}.drop-icon{font-size:27px;color:var(--accent);font-weight:700}.row{display:flex;gap:12px;align-items:baseline}.between{justify-content:space-between}.num{font-size:42px;font-weight:800;letter-spacing:-.04em}.bar{height:10px;background:#e7eee8;border-radius:100px;overflow:hidden}.bar span{display:block;height:100%;background:var(--accent);border-radius:100px;transition:width .35s ease}
+  ul{padding-left:20px;margin:0 0 12px}li{margin:0 0 7px}.price{display:flex;align-items:baseline;gap:10px;margin:6px 0 2px}.price b{font-size:31px;letter-spacing:-.02em}.price s{color:var(--muted)}
+  .foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.hide{display:none}.ok{color:var(--accent);font-weight:700}
+  details{border-top:1px solid var(--line);padding:12px 0}summary{font-weight:700;cursor:pointer}.metric{margin:15px 0}.metric .lbl{display:flex;justify-content:space-between;font-size:15px;margin-bottom:5px}.metric b{color:var(--accent)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+  .warn{background:#fff7e6;border:1px solid #f0dcae;color:#6b4a00;border-radius:13px;padding:12px;font-size:14px}.notice{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:12px;font-size:14px}.error{color:var(--danger);font-size:14px}.pill{display:inline-block;background:var(--accent2);color:var(--accent);border-radius:99px;padding:4px 9px;font-size:12px;font-weight:700}.day{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}.day:first-child{border-top:0}.day-n{min-width:44px;color:var(--accent);font-weight:800}.locked{color:var(--muted)}
+</style>
+<script src="analyze.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">Разбор по фото · без регистрации</span>
+  <h1>Поймите, что мешает ребёнку писать увереннее</h1>
+  <p class="sub">Загрузите одну страницу тетради. Сначала бесплатно покажем, что видно на фото, а затем предложим уточнить оценку — без регистрации, квиза и лишних шагов.</p>
 
+  <div class="card">
+    <form id="up" onsubmit="return false">
+      <label class="drop" for="file">
+        <div class="drop-icon">+</div>
+        <div class="drop-title">Выбрать фото из телефона</div>
+        <div class="tiny">Можно выбрать снимок из галереи или открыть камеру вручную. Лучше: сверху, при рассеянном свете, лист целиком.</div>
+        <input id="file" type="file" accept="image/*">
+      </label>
+      <div id="quality" class="notice hide" style="margin-top:12px"></div>
+      <label class="tiny" style="display:flex;gap:8px;margin:12px 0 0;align-items:flex-start">
+        <input id="consent" type="checkbox" style="margin-top:3px">
+        <span>Я родитель или законный представитель и согласен на обработку фото работы для разбора. Фото не отправляется на сервер этой версии и удаляется из памяти после закрытия страницы.</span>
+      </label>
+      <button class="btn" id="go" disabled style="margin-top:12px">Показать разбор</button>
+      <div class="tiny" id="hint" style="margin-top:8px">Сначала выберите фото и подтвердите согласие.</div>
+    </form>
+  </div>
+
+  <div id="result" class="hide">
+    <h2>Что видно на этой странице</h2>
+    <div class="card" style="padding:12px">
+      <canvas id="overlay" style="width:100%;height:auto;border-radius:10px;display:block"></canvas>
+      <p class="tiny" style="margin:8px 0 0">Фото обработано прямо в браузере — оно никуда не отправлено.</p>
+      <div class="legend"><span><i style="background:#176b55"></i>базовая линия</span><span><i style="background:#8fbfae"></i>зона высоты</span><span><i style="background:#285ab4"></i>направляющие наклона</span></div>
+    </div>
+
+    <div class="card">
+      <div class="row between" style="align-items:center">
+        <div><div class="tiny">Индекс регулярности</div><div class="num" id="score">—<span style="font-size:18px;color:var(--muted)">/100</span></div></div>
+        <div style="text-align:right" class="tiny" id="rowsline"></div>
+      </div>
+      <p class="tiny" style="margin:6px 0 0">Это индекс ровности следа на фото, а не оценка способностей ребёнка и не диагноз.</p>
+    </div>
+
+    <div class="card" id="metrics">
+      <div class="metric"><div class="lbl"><span>Ровность наклона</span><b id="m-slant">—</b></div><div class="bar"><span id="b-slant" style="width:0%"></span></div><div class="tiny" id="t-slant"></div></div>
+      <div class="metric"><div class="lbl"><span>Параллельность штрихов</span><b id="m-parallel">—</b></div><div class="bar"><span id="b-parallel" style="width:0%"></span></div><div class="tiny" id="t-parallel"></div></div>
+      <div class="metric"><div class="lbl"><span>Одинаковая высота букв</span><b id="m-height">—</b></div><div class="bar"><span id="b-height" style="width:0%"></span></div><div class="tiny" id="t-height"></div></div>
+      <div class="metric"><div class="lbl"><span>Однообразие элементов</span><b id="m-glyphs">—</b></div><div class="bar"><span id="b-glyphs" style="width:0%"></span></div><div class="tiny" id="t-glyphs"></div></div>
+      <div class="metric"><div class="lbl"><span>Держит строку</span><b id="m-line">—</b></div><div class="bar"><span id="b-line" style="width:0%"></span></div><div class="tiny" id="t-line"></div></div>
+      <div class="metric"><div class="lbl"><span>Ровные пробелы</span><b id="m-spacing">—</b></div><div class="bar"><span id="b-spacing" style="width:0%"></span></div><div class="tiny" id="t-spacing"></div></div>
+      <div class="metric"><div class="lbl"><span>Межстрочный интервал</span><b id="m-lines">—</b></div><div class="bar"><span id="b-lines" style="width:0%"></span></div><div class="tiny" id="t-lines"></div></div>
+      <div class="metric"><div class="lbl"><span>Стабильность толщины линии</span><b id="m-pressure">—</b></div><div class="bar"><span id="b-pressure" style="width:0%"></span></div><div class="tiny" id="t-pressure"></div></div>
+      <div class="metric"><div class="lbl"><span>Регулярность форм</span><b id="m-clarity">—</b></div><div class="bar"><span id="b-clarity" style="width:0%"></span></div><div class="tiny" id="t-clarity"></div></div>
+    </div>
+
+    <div class="card" id="observations">
+      <span class="pill">Бесплатная первая диагностика</span>
+      <h3 style="margin-top:9px">Что важнее исправить сначала</h3>
+      <div id="observation-list"></div>
+    </div>
+
+    <div class="card" id="week-plan">
+      <span class="pill">План на 7 дней</span>
+      <h3 style="margin-top:9px">Одна короткая цель за раз</h3>
+      <p class="tiny">Занятие занимает 5–15 минут. Пишите на бумаге и не превращайте практику в наказание.</p>
+      <div id="plan-list"></div>
+    </div>
+
+    <div class="card" id="precision-card">
+      <span class="pill">Следующий шаг — по желанию</span>
+      <h3 style="margin-top:9px">Уточнить оценку после первого разбора</h3>
+      <p class="tiny">Вы уже увидели результат. Теперь можно добавить возраст ребёнка и второе фото похожей страницы — это помогает сравнить работу с учётом возраста, а не блокирует первый вход.</p>
+      <button class="btn ghost" id="precision-toggle">Уточнить без регистрации</button>
+      <div id="precision-form" class="hide" style="margin-top:12px">
+        <label class="tiny" for="age">Возраст ребёнка</label>
+        <select id="age" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin:5px 0 10px;font:inherit">
+          <option value="">Выберите возраст</option><option>5–7 лет</option><option>7–10 лет</option><option>9–12 лет</option>
+        </select>
+        <label class="drop" for="second-file" style="padding:15px"><div class="drop-title">Добавить второе фото</div><div class="tiny">Без регистрации. Фото останется в браузере.</div><input id="second-file" type="file" accept="image/*"></label>
+        <button class="btn" id="precision-submit" disabled style="margin-top:10px">Сравнить две страницы</button>
+        <div class="tiny" id="precision-note" style="margin-top:8px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="price"><b>490 ₽</b><s>вместо отдельного занятия</s></div>
+      <p class="tiny" style="margin:0 0 10px">Полный разбор: девять метрик, дополнительные пометки на фото, три упражнения, готовый недельный план и повторное сравнение «было/стало».</p>
+      <button class="btn" id="pay">Получить полный разбор</button>
+      <div class="tiny" style="margin-top:8px" id="paynote"></div>
+    </div>
+    <button class="btn ghost" id="share">Поделиться результатом</button>
+    <button class="btn ghost" id="clear" style="margin-top:10px">Удалить фото из этого разбора</button>
+  </div>
+
+  <h2>Что вы получите</h2>
+  <ul><li>Что именно видно на странице: строки, высота и наклон.</li><li>Одну приоритетную цель и упражнения под неё, а не общий совет «писать красивее».</li><li>Повторную проверку через неделю на новом фото.</li></ul>
+
+  <h2>Как это работает</h2>
+  <p><b>1.</b> Фотографируете страницу сверху.<br><b>2.</b> Получаете пометки и три наблюдения.<br><b>3.</b> Занимаетесь по 5–15 минут в день.<br><b>4.</b> Загружаете новое фото и сравниваете динамику.</p>
+
+  <h2>Чего сервис не делает</h2>
+  <div class="warn">Это образовательный разбор, а не медицинская диагностика. По фото нельзя надёжно определить скорость, силу нажима, посадку, хват, дисграфию или дислексию. Если трудность стойкая и мешает учёбе, обсудите её с преподавателем, логопедом или нейропсихологом.</div>
+
+  <h2>Вопросы</h2>
+  <details><summary>Подойдёт леворукому ребёнку?</summary><p>Да. Прямой или левый наклон сам по себе не считается ошибкой. Мы показываем ровность следа, а не подгоняем ребёнка под один образец.</p></details>
+  <details><summary>Нужен сканер?</summary><p>Нет. Достаточно телефона: снимите сверху, при свете, без бликов и с листом целиком.</p></details>
+  <details><summary>Что происходит с фото?</summary><p>В этой версии изображение анализируется локально в браузере и не отправляется на сервер. Закройте страницу или нажмите «Удалить фото», чтобы убрать его из текущего разбора.</p></details>
+  <details><summary>Это заменит занятия с репетитором?</summary><p>Нет. Сервис показывает измеримую сторону следа и предлагает практику. Причину трудности и постановку навыка проверяет человек.</p></details>
+
+  <div class="foot">Демонстрационный MVP. Метрики показывают регулярность геометрии следа, а не способности ребёнка. Не является медицинской услугой.</div>
 </div>
-<a class="cta" href="#" onclick="alert('Здесь будет запись к тренеру (демо)');return false">Записаться на разбор к тренеру</a>
 
-<p class="note">Автоматическая оценка по геометрии письма на фото (наклон, параллельность штрихов, высота, однообразие букв, строка, пробелы, интервал, толщина линии, чёткость). Это не графология и не оценка личности, это скрининг, а не диагноз; результат зависит от качества снимка. Точный разбор — у тренера.</p>
-</div><script>
-var SETS={"auto": [{"drill": "WS1", "title": "«Пробел-пальчик»", "text": "После каждого слова прикладывайте к листу указательный палец — пробел шириной с палец. Пять строк «мама мыла раму», палец каждый раз на новое место.", "for_metric": "Ровные пробелы", "metric": "spacing", "score": 53}, {"drill": "FM1", "title": "«Буква-эталон»", "text": "Выберите букву, которая сильнее всего «гуляет», напишите её один раз крупно — это эталон. Дальше пишите её же 20 раз в строку, сверяясь с эталоном после каждой буквы.", "for_metric": "Одну букву пишет одинаково", "metric": "glyphs", "score": 64}, {"drill": "SZ1", "title": "«Три линейки»", "text": "Пишите слова «мама», «лимон», «сон» между двумя вспомогательными линиями высотой 5 мм — по строке на слово, касаясь обеих линий. Буквы должны заполнять просвет целиком.", "for_metric": "Одинаковая высота букв", "metric": "size", "score": 72}], "slant": [{"drill": "SL2", "title": "«Заборчик»", "text": "Между двумя линиями нарисуйте ряд наклонных палочек через 3 мм — все под углом первой, 4 ряда по 15 штук. Потом напишите «шишел» между теми же линиями: просветы и наклон не меняются.", "for_metric": "Параллельность штрихов", "metric": "parallel", "score": 77}, {"drill": "SL1", "title": "«Рельсы»", "text": "Проведите 10 наклонных линий через три опорные точки под одним углом и пишите элементы прямо по ним: «шшш», «иии», «ппп». Палочки не должны вылезать из своих рельсов.", "for_metric": "Параллельность штрихов", "metric": "parallel", "score": 77}, {"drill": "SL3", "title": "Штриховка под наклон", "text": "Заштрихуйте квадрат 10×10 см наклонной линией через каждые 2 мм — без линейки, от руки. Первая линия задаёт угол, остальные идут строго параллельно ей.", "for_metric": "Ровность наклона", "metric": "slant", "score": 82}], "size": [{"drill": "FM1", "title": "«Буква-эталон»", "text": "Выберите букву, которая сильнее всего «гуляет», напишите её один раз крупно — это эталон. Дальше пишите её же 20 раз в строку, сверяясь с эталоном после каждой буквы.", "for_metric": "Одну букву пишет одинаково", "metric": "glyphs", "score": 64}, {"drill": "FM2", "title": "Калька на букву", "text": "Обведите лучший экземпляр буквы через кальку, подложите кальку под лист и напишите ещё три строки — контур должен совпадать с формой эталона.", "for_metric": "Одну букву пишет одинаково", "metric": "glyphs", "score": 64}, {"drill": "SZ1", "title": "«Три линейки»", "text": "Пишите слова «мама», «лимон», «сон» между двумя вспомогательными линиями высотой 5 мм — по строке на слово, касаясь обеих линий. Буквы должны заполнять просвет целиком.", "for_metric": "Одинаковая высота букв", "metric": "size", "score": 72}], "spacing": [{"drill": "WS1", "title": "«Пробел-пальчик»", "text": "После каждого слова прикладывайте к листу указательный палец — пробел шириной с палец. Пять строк «мама мыла раму», палец каждый раз на новое место.", "for_metric": "Ровные пробелы", "metric": "spacing", "score": 53}, {"drill": "WS2", "title": "«Точка-разделитель»", "text": "Ставьте карандашом точку после каждого слова, потом сотрите. Пять строк — так пробел становится видимым, пока рука не привыкнет.", "for_metric": "Ровные пробелы", "metric": "spacing", "score": 53}, {"drill": "LN1", "title": "«Через строку»", "text": "Пишите только через строку, не задевая соседнюю: хвосты и петли не должны касаться нижней строки. Одна страница любого текста.", "for_metric": "Межстрочный интервал", "metric": "lines", "score": 98}], "baseline": [{"drill": "BL1", "title": "«Опора на линию»", "text": "Каждая буква касается нижней линии строки — ни выше, ни ниже. Пять строк одного текста, в конце каждой строки проверьте низ букв линейкой.", "for_metric": "Держит строку", "metric": "baseline", "score": 87}, {"drill": "BL4", "title": "Дорожка 10 мм", "text": "Обведите дорожку шириной 10 мм и пишите внутри неё: буквы не должны вылезать за верх и низ дорожки. Три дорожки по всей ширине листа.", "for_metric": "Держит строку", "metric": "baseline", "score": 87}, {"drill": "LN1", "title": "«Через строку»", "text": "Пишите только через строку, не задевая соседнюю: хвосты и петли не должны касаться нижней строки. Одна страница любого текста.", "for_metric": "Межстрочный интервал", "metric": "lines", "score": 98}]}, FOCUS={"auto": {"id": "auto", "label": "Главное за меня", "hint": "три самых слабых места", "metrics": null}, "slant": {"id": "slant", "label": "Ровный наклон", "hint": "буквы под одним углом", "metrics": ["slant", "parallel"]}, "size": {"id": "size", "label": "Одинаковые буквы", "hint": "буква всегда одной формы", "metrics": ["size", "glyphs"]}, "spacing": {"id": "spacing", "label": "Аккуратные пробелы", "hint": "слова не слипаются", "metrics": ["spacing", "lines"]}, "baseline": {"id": "baseline", "label": "Ровная строка", "hint": "буквы стоят на линии", "metrics": ["baseline", "lines"]}}, cur="auto";
-function render(f){
-  cur=f;
-  document.querySelectorAll('#focus .chip').forEach(function(b){b.classList.toggle('on',b.dataset.f===f)});
-  var exs=SETS[f]||[], box=document.getElementById('exs'), h='';
-  for(var i=0;i<exs.length;i++){var e=exs[i];
-    var note=e.score>=75 ? 'сильный параметр — упражнение на поддержку' : 'для параметра «'+e.for_metric+'» — сейчас '+e.score+' из 100';
-    h+='<div class="ex"><div class="n">'+(i+1)+'</div><div><b>'+e.title+'</b><em>'+note+'</em><p>'+e.text+'</p></div></div>';}
-  box.innerHTML=h;
-  var want=(FOCUS[f]||{}).metrics||null;
-  document.querySelectorAll('.m').forEach(function(m){
-    var on=!want||want.indexOf(m.dataset.metric)>-1; m.classList.toggle('dim',!on);});
-  document.getElementById('exh').textContent = f==='auto' ? 'Упражнения под самые слабые места' : 'Упражнения: '+FOCUS[f].label.toLowerCase();
-}
-document.querySelectorAll('#focus .chip').forEach(function(b){b.onclick=function(){render(b.dataset.f)}});
-render(cur);
-</script></body></html>
+<script>
+  const file = document.getElementById('file');
+  const consent = document.getElementById('consent');
+  const go = document.getElementById('go');
+  const hint = document.getElementById('hint');
+  const quality = document.getElementById('quality');
+  const result = document.getElementById('result');
+  let selectedFile = null;
+
+  function refresh(){
+    go.disabled = !(selectedFile && consent.checked);
+    hint.textContent = go.disabled ? (!selectedFile ? 'Выберите фото страницы тетради.' : 'Подтвердите согласие, чтобы продолжить.') : 'Готово — нажмите «Показать разбор».\n';
+  }
+  file.addEventListener('change', () => {
+    selectedFile = file.files[0] || null;
+    if (!selectedFile) { quality.classList.add('hide'); refresh(); return; }
+    const mb = selectedFile.size / 1024 / 1024;
+    quality.classList.remove('hide');
+    quality.textContent = mb > 12 ? 'Фото большое. Для быстрой обработки лучше снимок до 12 МБ.' : 'Фото выбрано. Проверьте, что весь лист в кадре и на тексте нет тени.';
+    refresh();
+  });
+  consent.addEventListener('change', refresh);
+
+  const val = n => Math.round(n);
+  function put(id, score, note){
+    const value = Math.max(0, Math.min(100, Math.round(score || 0)));
+    document.getElementById('m-' + id).textContent = value;
+    const bar = document.getElementById('b-' + id);
+    bar.style.width = value + '%';
+    bar.style.background = value >= 70 ? 'var(--accent)' : (value >= 45 ? '#c98b1f' : 'var(--danger)');
+    document.getElementById('t-' + id).textContent = note;
+  }
+  function observation(title, text, tone){
+    const el = document.createElement('div'); el.className = 'day';
+    el.innerHTML = '<div class="day-n">' + tone + '</div><div><b>' + title + '</b><div class="tiny">' + text + '</div></div>';
+    document.getElementById('observation-list').appendChild(el);
+  }
+  const metricWords = {
+    slant: ['Ровность наклона', 'Штрихи заваливаются по-разному.', 'ведём палочки как параллельные рельсы'],
+    parallel: ['Параллельность штрихов', 'Наклонные элементы смотрят под разными углами.', 'держим один угол штриха'],
+    height: ['Высота букв', 'Размер букв заметно меняется.', 'держим буквы между двумя линиями'],
+    glyphs: ['Однообразие элементов', 'Похожие элементы выглядят по-разному.', 'сверяем букву с одним эталоном'],
+    line: ['Базовая линия', 'К концу строки буквы уводит выше или ниже.', 'опираем буквы на нижнюю линию'],
+    spacing: ['Пробелы', 'Слова то слипаются, то разлетаются.', 'оставляем пробел размером с палец'],
+    lines: ['Межстрочный интервал', 'Строки могут быть слишком неравномерными.', 'оставляем одинаковые «рельсы» между строками'],
+    pressure: ['Толщина линии', 'Толщина штриха меняется; это косвенная оценка, не сила нажима.', 'пишем мягко и одинаково'],
+    clarity: ['Регулярность форм', 'Элементы страницы выглядят неодинаково.', 'пишем медленнее и отделяем элементы']
+  };
+  function makePlan(primary){
+    const focus = (metricWords[primary] || metricWords.height)[2];
+    const tasks = [
+      ['День 1','Посмотрите на образец и выберите одну букву для тренировки: ' + focus + '.'],
+      ['День 2','«Рельсы»: 2 строки одинаковых элементов медленно, без гонки.'],
+      ['День 3','Напишите 3 строки коротких слов на бумаге, делая паузу после каждой строки.'],
+      ['День 4','Повторите лучшую букву 10 раз и обведите ту, которая получилась стабильнее.'],
+      ['День 5','Напишите 2 предложения, сохраняя цель: ' + focus + '.'],
+      ['День 6','Сделайте короткую практику без подсказки и похвалите усилие, а не идеальность.'],
+      ['День 7','Снимите новую страницу сверху при похожем свете для сравнения.']
+    ];
+    document.getElementById('plan-list').innerHTML = tasks.map((t,i) => '<div class="day"><div class="day-n">' + t[0] + '</div><div class="' + (i > 0 ? 'locked' : '') + '">' + t[1] + (i > 0 ? '<div class="tiny">Откроется после выполнения предыдущего шага в полной версии.</div>' : '') + '</div></div>').join('');
+  }
+
+  go.addEventListener('click', () => {
+    if (!selectedFile) return;
+    go.disabled = true; go.textContent = 'Разбираем страницу…';
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const res = window.HandwritingAnalyzer.analyse(img);
+        const cv = document.getElementById('overlay'); cv.width = res.canvas.width; cv.height = res.canvas.height; window.HandwritingAnalyzer.draw(res, cv);
+        document.getElementById('score').innerHTML = res.score + '<span style="font-size:18px;color:var(--muted)">/100</span>';
+        document.getElementById('rowsline').innerHTML = 'строк найдено: ' + res.metrics.rows + '<br>элементов: ' + res.core.length;
+        const m = res.metrics;
+        put('slant', m.slant.score, 'Средний наклон ' + val(m.slant.deg) + '°, разброс ±' + val(m.slant.dev) + '°.');
+        put('parallel', m.parallel.score, 'Разброс направлений штрихов ±' + val(m.parallel.dev) + '°. Это эвристика по видимым элементам.');
+        put('height', m.height.score, 'Разброс высоты — ' + val(m.height.cv * 100) + '%.');
+        put('glyphs', m.glyphs.score, 'Повторяемость элементов — эвристика без распознавания букв.');
+        put('line', m.line.score, 'Качание строки — ' + (m.line.xh * 100).toFixed(0) + '% высоты буквы.');
+        put('spacing', m.spacing.score, 'Разброс видимых промежутков — ' + val(m.spacing.cv * 100) + '%.');
+        put('lines', m.lines.score, 'Разброс расстояний между строками — ' + val(m.lines.cv * 100) + '%.');
+        put('pressure', m.pressure.score, 'Разброс толщины/плотности линии — ' + val(m.pressure.cv * 100) + '%. Не сила нажима.');
+        put('clarity', m.clarity.score, 'Композит регулярности элементов — не процент читаемости.');
+        document.getElementById('observation-list').innerHTML = '';
+        const scores = Object.keys(metricWords).map(id => ({id, v: m[id].score})).sort((a,b)=>a.v-b.v);
+        scores.slice(0, 3).forEach((item, index) => observation(metricWords[item.id][0], metricWords[item.id][1], String(index + 1)));
+        makePlan(scores[0].id);
+        result.classList.remove('hide'); result.scrollIntoView({behavior:'smooth', block:'start'});
+      } catch (e) { hint.textContent = 'Не получилось разобрать фото. Снимите лист целиком сверху, при рассеянном свете.'; }
+      go.textContent = 'Показать разбор'; refresh();
+    };
+    img.onerror = () => { hint.textContent = 'Файл не открылся. Попробуйте другое фото.'; go.disabled = false; go.textContent = 'Показать разбор'; };
+    img.src = URL.createObjectURL(selectedFile);
+  });
+  const precisionToggle = document.getElementById('precision-toggle');
+  const precisionForm = document.getElementById('precision-form');
+  const age = document.getElementById('age');
+  const secondFile = document.getElementById('second-file');
+  const precisionSubmit = document.getElementById('precision-submit');
+  precisionToggle.addEventListener('click', () => { precisionForm.classList.toggle('hide'); precisionToggle.textContent = precisionForm.classList.contains('hide') ? 'Уточнить без регистрации' : 'Скрыть уточнение'; });
+  function refreshPrecision(){ precisionSubmit.disabled = !(age.value && secondFile.files.length); }
+  age.addEventListener('change', refreshPrecision); secondFile.addEventListener('change', refreshPrecision);
+  precisionSubmit.addEventListener('click', () => { document.getElementById('precision-note').textContent = 'Готово: для точного сравнения добавлены возраст и второе фото. Сохранение и отправка данных пока не подключены — это демонстрация вовлечения после первого разбора.'; precisionSubmit.disabled = true; });
+  document.getElementById('pay').addEventListener('click', () => { document.getElementById('paynote').textContent = 'Оплата подключается на следующем шаге: карта и СБП. Пока это демонстрация.'; });
+  document.getElementById('share').addEventListener('click', async () => { const text = 'Разбор почерка ребёнка: три наблюдения и план на 7 дней'; if (navigator.share) { try { await navigator.share({title:text,text}); return; } catch(e){} } try { await navigator.clipboard.writeText(location.href); alert('Ссылка скопирована'); } catch(e){} });
+  document.getElementById('clear').addEventListener('click', () => { selectedFile = null; file.value = ''; quality.classList.add('hide'); result.classList.add('hide'); document.getElementById('overlay').getContext('2d').clearRect(0,0,1,1); refresh(); window.scrollTo({top:0,behavior:'smooth'}); });
+  refresh();
+</script>
+</body>
+</html>
