@@ -209,7 +209,7 @@
         const res = window.HandwritingAnalyzer.analyse(img);
         const cv = document.getElementById('overlay'); cv.width = res.canvas.width; cv.height = res.canvas.height; window.HandwritingAnalyzer.draw(res, cv);
         document.getElementById('score').innerHTML = res.score + '<span style="font-size:18px;color:var(--muted)">/100</span>';
-        document.getElementById('rowsline').innerHTML = 'строк найдено: ' + res.metrics.rows + '<br>элементов: ' + res.core.length;
+        document.getElementById('rowsline').innerHTML = 'строк найдено: ' + res.metrics.rows + '<br>элементов: ' + res.core.length + '<br>наклон страницы исправлен: ' + (res.pageSkewDeg || 0).toFixed(1) + '°';
         const m = res.metrics;
         put('slant', m.slant.score, 'Средний наклон ' + val(m.slant.deg) + '°, разброс ±' + val(m.slant.dev) + '°.');
         put('parallel', m.parallel.score, 'Разброс направлений штрихов ±' + val(m.parallel.dev) + '°. Это эвристика по видимым элементам.');

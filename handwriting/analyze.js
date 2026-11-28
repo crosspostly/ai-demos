@@ -224,14 +224,51 @@
       .sort((a, b) => a.minx - b.minx);
   }
 
+  // Применяем только малый affine-deskew: наклон страницы не должен
+  // попадать в метрики наклона букв, базовой линии и межстрочного интервала.
+  function deskewMask(mask, w, h, slope) {
+    const out = new Uint8Array(w * h);
+    const cx = (w - 1) / 2;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (!mask[y * w + x]) continue;
+        const yy = Math.round(y - slope * (x - cx));
+        if (yy >= 0 && yy < h) out[yy * w + x] = 1;
+      }
+    }
+    return out;
+  }
+
+  function deskewCanvas(canvas, slope) {
+    if (Math.abs(slope) < 0.001) return canvas;
+    const out = document.createElement('canvas');
+    out.width = canvas.width; out.height = canvas.height;
+    const ctx = out.getContext('2d');
+    const cx = (canvas.width - 1) / 2;
+    // y' = y - slope * (x - cx)
+    ctx.setTransform(1, -slope, 0, 1, 0, slope * cx);
+    ctx.drawImage(canvas, 0, 0);
+    return out;
+  }
+
   function analyse(img) {
     const canvas = toCanvas(img, MAX_W);
     const { g, w, h } = gray(canvas);
-    const mask = inkMask(g, w, h);
-    const comps = components(mask, w, h);
+    const rawMask = inkMask(g, w, h);
+    let comps = components(rawMask, w, h);
     const heightsAll = comps.map(c => c.h).filter(v => v >= 6);
     const medAll = median(heightsAll);
-    const rows = rowsFromComps(comps, medAll);
+    const roughRows = rowsFromComps(comps, medAll);
+    const roughLines = roughRows.map(r => fitBaseline(rawMask, w, r)).filter(Boolean);
+    // Median is deliberately used: one badly segmented line must not rotate
+    // the complete page. Clamp to +/- 12 degrees to avoid catastrophic fixes.
+    const pageSkew = Math.max(-0.2126, Math.min(0.2126, median(roughLines.map(l => l.a))));
+    const mask = deskewMask(rawMask, w, h, pageSkew);
+    const displayCanvas = deskewCanvas(canvas, pageSkew);
+    comps = components(mask, w, h);
+    const heightsAllDeskewed = comps.map(c => c.h).filter(v => v >= 6);
+    const medAllDeskewed = median(heightsAllDeskewed);
+    const rows = rowsFromComps(comps, medAllDeskewed);
 
     // высоты строчных: берём компоненты средней высоты (не выносные, не точки)
     const heights = comps.map(c => c.h).filter(v => v >= 6);
@@ -313,7 +350,8 @@
     const outliers = core.filter(c => c.h < meanH * 0.6 || c.h > meanH * 1.55).slice(0, 24);
 
     return {
-      canvas, comps, core, lines, outliers, score, rowsRaw: rows.length,
+      canvas, displayCanvas, comps, core, lines, outliers, score, rowsRaw: rows.length,
+      pageSkewDeg: Math.round(Math.atan(pageSkew) * 180 / Math.PI * 10) / 10,
       metrics: {
         height: { score: Math.round(sHeight), cv: cvH, mean: meanH },
         slant: { score: Math.round(sSlant), deg: slant, dev: slantDev },
@@ -331,8 +369,8 @@
 
   function draw(res, canvas) {
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(res.canvas, 0, 0);
-    const W = res.canvas.width, H = res.canvas.height;
+    ctx.drawImage(res.displayCanvas || res.canvas, 0, 0);
+    const W = (res.displayCanvas || res.canvas).width, H = (res.displayCanvas || res.canvas).height;
     ctx.font = '13px -apple-system, Arial, sans-serif';
     ctx.lineWidth = 2;
 
