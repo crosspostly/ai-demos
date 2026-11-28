@@ -1,0 +1,1867 @@
+{
+  "analyzer": "prototype/landing/analyze.js",
+  "corpus_manifest": "research/test-corpus/manifest.json",
+  "note": "Engineering regression output only; not a clinical or normative label.",
+  "samples": [
+    {
+      "id": "sample-001",
+      "file": "images/sample-001.jpg",
+      "rows": 2,
+      "raw_rows": 2,
+      "components": 67,
+      "core_components": 46,
+      "orange_rows": 0,
+      "red_outliers": 6,
+      "score": 82,
+      "crop": {
+        "left": 7,
+        "top": 12,
+        "width": 715,
+        "height": 103
+      },
+      "deskew_angle_deg": 0.8,
+      "metrics": {
+        "height": {
+          "score": 79,
+          "cv": 0.30657336515839884,
+          "mean": 14.195652173913043
+        },
+        "slant": {
+          "score": 69,
+          "deg": 23.96248897457818,
+          "dev": 6.293948188951084
+        },
+        "parallel": {
+          "score": 65,
+          "dev": 6.293948188951084
+        },
+        "glyphs": {
+          "score": 100,
+          "cv": 0.2958621214400774
+        },
+        "line": {
+          "score": 100,
+          "rmse": 5.905452689720139,
+          "xh": 0.41600432423755956
+        },
+        "spacing": {
+          "score": 57,
+          "cv": 0.7308946812172962,
+          "n": 31
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 34.735732183113676
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.1980763523674744
+        },
+        "clarity": {
+          "score": 80,
+          "cv": 0.2958621214400774
+        },
+        "rows": 2
+      }
+    },
+    {
+      "id": "sample-002",
+      "file": "images/sample-002.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 63,
+      "core_components": 39,
+      "orange_rows": 0,
+      "red_outliers": 1,
+      "score": 90,
+      "crop": {
+        "left": 6,
+        "top": 9,
+        "width": 894,
+        "height": 148
+      },
+      "deskew_angle_deg": 0.2,
+      "metrics": {
+        "height": {
+          "score": 96,
+          "cv": 0.1993301539859583,
+          "mean": 13.846153846153847
+        },
+        "slant": {
+          "score": 91,
+          "deg": 14.931417178137565,
+          "dev": 2.83666010112546
+        },
+        "parallel": {
+          "score": 90,
+          "dev": 2.83666010112546
+        },
+        "glyphs": {
+          "score": 88,
+          "cv": 0.40490460088837343
+        },
+        "line": {
+          "score": 100,
+          "rmse": 6.685565932534467,
+          "xh": 0.4828464284608226
+        },
+        "spacing": {
+          "score": 65,
+          "cv": 0.6275855861284149,
+          "n": 18
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.20012454630272242
+        },
+        "clarity": {
+          "score": 74,
+          "cv": 0.40490460088837343
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-003",
+      "file": "images/sample-003.jpg",
+      "rows": 3,
+      "raw_rows": 3,
+      "components": 86,
+      "core_components": 48,
+      "orange_rows": 0,
+      "red_outliers": 5,
+      "score": 85,
+      "crop": {
+        "left": 3,
+        "top": 0,
+        "width": 892,
+        "height": 187
+      },
+      "deskew_angle_deg": -0.2,
+      "metrics": {
+        "height": {
+          "score": 83,
+          "cv": 0.2871387517417924,
+          "mean": 15.541666666666666
+        },
+        "slant": {
+          "score": 78,
+          "deg": 21.801409486351815,
+          "dev": 4.873896422204766
+        },
+        "parallel": {
+          "score": 76,
+          "dev": 4.873896422204766
+        },
+        "glyphs": {
+          "score": 97,
+          "cv": 0.32963331499769916
+        },
+        "line": {
+          "score": 100,
+          "rmse": 3.0075259054008385,
+          "xh": 0.19351373117860624
+        },
+        "spacing": {
+          "score": 60,
+          "cv": 0.693673527220064,
+          "n": 24
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0.027628313965113855,
+          "median": 52.57195234361552
+        },
+        "pressure": {
+          "score": 86,
+          "cv": 0.3154690602291422
+        },
+        "clarity": {
+          "score": 83,
+          "cv": 0.32963331499769916
+        },
+        "rows": 3
+      }
+    },
+    {
+      "id": "sample-004",
+      "file": "images/sample-004.jpg",
+      "rows": 3,
+      "raw_rows": 3,
+      "components": 131,
+      "core_components": 96,
+      "orange_rows": 0,
+      "red_outliers": 8,
+      "score": 85,
+      "crop": {
+        "left": 6,
+        "top": 3,
+        "width": 894,
+        "height": 172
+      },
+      "deskew_angle_deg": 0.3,
+      "metrics": {
+        "height": {
+          "score": 87,
+          "cv": 0.28281910601518206,
+          "mean": 12.645833333333334
+        },
+        "slant": {
+          "score": 71,
+          "deg": 24.227745317954174,
+          "dev": 6.028691845575089
+        },
+        "parallel": {
+          "score": 67,
+          "dev": 6.028691845575089
+        },
+        "glyphs": {
+          "score": 100,
+          "cv": 0.26706224175877313
+        },
+        "line": {
+          "score": 100,
+          "rmse": 2.884067407256398,
+          "xh": 0.22806463846508582
+        },
+        "spacing": {
+          "score": 59,
+          "cv": 0.703129037275464,
+          "n": 62
+        },
+        "lines": {
+          "score": 98,
+          "cv": 0.08945231270645439,
+          "median": 57.39176702763176
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.1585155476721067
+        },
+        "clarity": {
+          "score": 86,
+          "cv": 0.26706224175877313
+        },
+        "rows": 3
+      }
+    },
+    {
+      "id": "sample-005",
+      "file": "images/sample-005.jpg",
+      "rows": 2,
+      "raw_rows": 2,
+      "components": 46,
+      "core_components": 24,
+      "orange_rows": 0,
+      "red_outliers": 6,
+      "score": 82,
+      "crop": {
+        "left": 5,
+        "top": 5,
+        "width": 893,
+        "height": 126
+      },
+      "deskew_angle_deg": 0.3,
+      "metrics": {
+        "height": {
+          "score": 60,
+          "cv": 0.34732661565256684,
+          "mean": 20.125
+        },
+        "slant": {
+          "score": 78,
+          "deg": 16.92751306414705,
+          "dev": 4.873896422204766
+        },
+        "parallel": {
+          "score": 76,
+          "dev": 4.873896422204766
+        },
+        "glyphs": {
+          "score": 86,
+          "cv": 0.43119883979346935
+        },
+        "line": {
+          "score": 100,
+          "rmse": 5.842821216872785,
+          "xh": 0.29032652009305765
+        },
+        "spacing": {
+          "score": 96,
+          "cv": 0.26996973490318127,
+          "n": 8
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 51.450074224116285
+        },
+        "pressure": {
+          "score": 86,
+          "cv": 0.31130566963400963
+        },
+        "clarity": {
+          "score": 71,
+          "cv": 0.43119883979346935
+        },
+        "rows": 2
+      }
+    },
+    {
+      "id": "sample-006",
+      "file": "images/sample-006.jpg",
+      "rows": 2,
+      "raw_rows": 2,
+      "components": 68,
+      "core_components": 52,
+      "orange_rows": 0,
+      "red_outliers": 5,
+      "score": 83,
+      "crop": {
+        "left": 5,
+        "top": 5,
+        "width": 878,
+        "height": 120
+      },
+      "deskew_angle_deg": 0.2,
+      "metrics": {
+        "height": {
+          "score": 85,
+          "cv": 0.26890483208175814,
+          "mean": 16.46153846153846
+        },
+        "slant": {
+          "score": 61,
+          "deg": 19.98310652189997,
+          "dev": 7.454298812748462
+        },
+        "parallel": {
+          "score": 57,
+          "dev": 7.454298812748462
+        },
+        "glyphs": {
+          "score": 96,
+          "cv": 0.33419220509774483
+        },
+        "line": {
+          "score": 100,
+          "rmse": 4.837227400840888,
+          "xh": 0.2938502626679044
+        },
+        "spacing": {
+          "score": 70,
+          "cv": 0.5713102688011198,
+          "n": 19
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 62.652084061072706
+        },
+        "pressure": {
+          "score": 99,
+          "cv": 0.2040171184057688
+        },
+        "clarity": {
+          "score": 80,
+          "cv": 0.33419220509774483
+        },
+        "rows": 2
+      }
+    },
+    {
+      "id": "sample-007",
+      "file": "images/sample-007.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 28,
+      "core_components": 17,
+      "orange_rows": 0,
+      "red_outliers": 1,
+      "score": 70,
+      "crop": {
+        "left": 11,
+        "top": 15,
+        "width": 524,
+        "height": 67
+      },
+      "deskew_angle_deg": 0.8,
+      "metrics": {
+        "height": {
+          "score": 91,
+          "cv": 0.22090686114588903,
+          "mean": 12.529411764705882
+        },
+        "slant": {
+          "score": 0,
+          "deg": 30.256437163529263,
+          "dev": 25.06200825579446
+        },
+        "parallel": {
+          "score": 0,
+          "dev": 25.06200825579446
+        },
+        "glyphs": {
+          "score": 100,
+          "cv": 0.2130210208437001
+        },
+        "line": {
+          "score": 100,
+          "rmse": 4.2375819214088715,
+          "xh": 0.3382107636805203
+        },
+        "spacing": {
+          "score": 70,
+          "cv": 0.5771140512894859,
+          "n": 10
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.1419301742729486
+        },
+        "clarity": {
+          "score": 80,
+          "cv": 0.2130210208437001
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-008",
+      "file": "images/sample-008.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 31,
+      "core_components": 27,
+      "orange_rows": 0,
+      "red_outliers": 1,
+      "score": 90,
+      "crop": {
+        "left": 7,
+        "top": 14,
+        "width": 656,
+        "height": 96
+      },
+      "deskew_angle_deg": -1.9,
+      "metrics": {
+        "height": {
+          "score": 94,
+          "cv": 0.27939138653018314,
+          "mean": 33.111111111111114
+        },
+        "slant": {
+          "score": 68,
+          "deg": 21.801409486351815,
+          "dev": 6.377180623607352
+        },
+        "parallel": {
+          "score": 65,
+          "dev": 6.377180623607352
+        },
+        "glyphs": {
+          "score": 98,
+          "cv": 0.31659594939071
+        },
+        "line": {
+          "score": 100,
+          "rmse": 8.17019079663845,
+          "xh": 0.24675072875753704
+        },
+        "spacing": {
+          "score": 100,
+          "cv": 0.09375685262788017,
+          "n": 5
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.17763479050273312
+        },
+        "clarity": {
+          "score": 84,
+          "cv": 0.31659594939071
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-009",
+      "file": "images/sample-009.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 28,
+      "core_components": 22,
+      "orange_rows": 0,
+      "red_outliers": 0,
+      "score": 90,
+      "crop": {
+        "left": 9,
+        "top": 15,
+        "width": 509,
+        "height": 78
+      },
+      "deskew_angle_deg": -1,
+      "metrics": {
+        "height": {
+          "score": 100,
+          "cv": 0.27701814569408234,
+          "mean": 24.09090909090909
+        },
+        "slant": {
+          "score": 65,
+          "deg": 19.653824058053303,
+          "dev": 6.911227119024687
+        },
+        "parallel": {
+          "score": 61,
+          "dev": 6.911227119024687
+        },
+        "glyphs": {
+          "score": 96,
+          "cv": 0.33338989402995717
+        },
+        "line": {
+          "score": 100,
+          "rmse": 3.572486109731172,
+          "xh": 0.14829187625299206
+        },
+        "spacing": {
+          "score": 100,
+          "cv": 0.1532440139472041,
+          "n": 5
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.13460260450302228
+        },
+        "clarity": {
+          "score": 89,
+          "cv": 0.33338989402995717
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-010",
+      "file": "images/sample-010.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 35,
+      "core_components": 23,
+      "orange_rows": 0,
+      "red_outliers": 5,
+      "score": 85,
+      "crop": {
+        "left": 14,
+        "top": 14,
+        "width": 740,
+        "height": 94
+      },
+      "deskew_angle_deg": -0.1,
+      "metrics": {
+        "height": {
+          "score": 65,
+          "cv": 0.3026503325325043,
+          "mean": 18.347826086956523
+        },
+        "slant": {
+          "score": 99,
+          "deg": 15.52411099675426,
+          "dev": 1.5786179722981046
+        },
+        "parallel": {
+          "score": 99,
+          "dev": 1.5786179722981046
+        },
+        "glyphs": {
+          "score": 72,
+          "cv": 0.5517323040497575
+        },
+        "line": {
+          "score": 100,
+          "rmse": 6.527049086402123,
+          "xh": 0.3557396421498787
+        },
+        "spacing": {
+          "score": 69,
+          "cv": 0.5871252947810206,
+          "n": 11
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.17381120106657558
+        },
+        "clarity": {
+          "score": 65,
+          "cv": 0.5517323040497575
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-011",
+      "file": "images/sample-011.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 42,
+      "core_components": 30,
+      "orange_rows": 0,
+      "red_outliers": 3,
+      "score": 78,
+      "crop": {
+        "left": 17,
+        "top": 9,
+        "width": 537,
+        "height": 89
+      },
+      "deskew_angle_deg": -0.1,
+      "metrics": {
+        "height": {
+          "score": 84,
+          "cv": 0.2624164144779761,
+          "mean": 20.066666666666666
+        },
+        "slant": {
+          "score": 48,
+          "deg": 15.52411099675426,
+          "dev": 9.492782481345756
+        },
+        "parallel": {
+          "score": 42,
+          "dev": 9.492782481345756
+        },
+        "glyphs": {
+          "score": 83,
+          "cv": 0.4510424979725081
+        },
+        "line": {
+          "score": 100,
+          "rmse": 7.876361622638419,
+          "xh": 0.3925097154138747
+        },
+        "spacing": {
+          "score": 84,
+          "cv": 0.40613902268773405,
+          "n": 8
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 95,
+          "cv": 0.24212157393692543
+        },
+        "clarity": {
+          "score": 70,
+          "cv": 0.4510424979725081
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-012",
+      "file": "images/sample-012.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 32,
+      "core_components": 24,
+      "orange_rows": 0,
+      "red_outliers": 1,
+      "score": 88,
+      "crop": {
+        "left": 14,
+        "top": 13,
+        "width": 653,
+        "height": 82
+      },
+      "deskew_angle_deg": 0.5,
+      "metrics": {
+        "height": {
+          "score": 93,
+          "cv": 0.22430138455014295,
+          "mean": 18.75
+        },
+        "slant": {
+          "score": 84,
+          "deg": 9.462322208025611,
+          "dev": 4.021990177020115
+        },
+        "parallel": {
+          "score": 82,
+          "dev": 4.021990177020115
+        },
+        "glyphs": {
+          "score": 85,
+          "cv": 0.4348868084419209
+        },
+        "line": {
+          "score": 100,
+          "rmse": 7.029805700100032,
+          "xh": 0.3749229706720017
+        },
+        "spacing": {
+          "score": 73,
+          "cv": 0.5392438489268844,
+          "n": 12
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 94,
+          "cv": 0.24444610028422362
+        },
+        "clarity": {
+          "score": 70,
+          "cv": 0.4348868084419209
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-013",
+      "file": "images/sample-013.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 41,
+      "core_components": 30,
+      "orange_rows": 0,
+      "red_outliers": 6,
+      "score": 82,
+      "crop": {
+        "left": 12,
+        "top": 2,
+        "width": 883,
+        "height": 112
+      },
+      "deskew_angle_deg": -0.3,
+      "metrics": {
+        "height": {
+          "score": 68,
+          "cv": 0.2853354210726325,
+          "mean": 31.133333333333333
+        },
+        "slant": {
+          "score": 97,
+          "deg": 5.194428907734803,
+          "dev": 1.930587441167006
+        },
+        "parallel": {
+          "score": 97,
+          "dev": 1.930587441167006
+        },
+        "glyphs": {
+          "score": 55,
+          "cv": 0.7091992947875067
+        },
+        "line": {
+          "score": 100,
+          "rmse": 3.969464034342415,
+          "xh": 0.12749884478615894
+        },
+        "spacing": {
+          "score": 64,
+          "cv": 0.6419583112014922,
+          "n": 12
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 84,
+          "cv": 0.3249947076062009
+        },
+        "clarity": {
+          "score": 64,
+          "cv": 0.7091992947875067
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-014",
+      "file": "images/sample-014.jpg",
+      "rows": 2,
+      "raw_rows": 2,
+      "components": 71,
+      "core_components": 54,
+      "orange_rows": 0,
+      "red_outliers": 4,
+      "score": 94,
+      "crop": {
+        "left": 5,
+        "top": 5,
+        "width": 883,
+        "height": 131
+      },
+      "deskew_angle_deg": 0,
+      "metrics": {
+        "height": {
+          "score": 88,
+          "cv": 0.23916933833801265,
+          "mean": 30.12962962962963
+        },
+        "slant": {
+          "score": 90,
+          "deg": 27.2995722113328,
+          "dev": 3.0718268933786277
+        },
+        "parallel": {
+          "score": 89,
+          "dev": 3.0718268933786277
+        },
+        "glyphs": {
+          "score": 100,
+          "cv": 0.22556920475275144
+        },
+        "line": {
+          "score": 100,
+          "rmse": 8.447296167055567,
+          "xh": 0.2803650848315923
+        },
+        "spacing": {
+          "score": 96,
+          "cv": 0.26509517952313694,
+          "n": 22
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 69.51683382481087
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.15779443443924854
+        },
+        "clarity": {
+          "score": 83,
+          "cv": 0.22556920475275144
+        },
+        "rows": 2
+      }
+    },
+    {
+      "id": "sample-015",
+      "file": "images/sample-015.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 65,
+      "core_components": 34,
+      "orange_rows": 0,
+      "red_outliers": 6,
+      "score": 79,
+      "crop": {
+        "left": 1,
+        "top": 4,
+        "width": 895,
+        "height": 87
+      },
+      "deskew_angle_deg": -0.1,
+      "metrics": {
+        "height": {
+          "score": 72,
+          "cv": 0.3442808361145131,
+          "mean": 24.029411764705884
+        },
+        "slant": {
+          "score": 80,
+          "deg": 7.125016348901809,
+          "dev": 4.6354634269026604
+        },
+        "parallel": {
+          "score": 77,
+          "dev": 4.6354634269026604
+        },
+        "glyphs": {
+          "score": 68,
+          "cv": 0.5920869846672262
+        },
+        "line": {
+          "score": 100,
+          "rmse": 15.086767383101627,
+          "xh": 0.627845888648048
+        },
+        "spacing": {
+          "score": 79,
+          "cv": 0.4690620594889572,
+          "n": 18
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 66,
+          "cv": 0.46919227769768457
+        },
+        "clarity": {
+          "score": 54,
+          "cv": 0.5920869846672262
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-016",
+      "file": "images/sample-016.jpg",
+      "rows": 2,
+      "raw_rows": 2,
+      "components": 67,
+      "core_components": 40,
+      "orange_rows": 0,
+      "red_outliers": 4,
+      "score": 86,
+      "crop": {
+        "left": 5,
+        "top": 0,
+        "width": 889,
+        "height": 123
+      },
+      "deskew_angle_deg": -1.2,
+      "metrics": {
+        "height": {
+          "score": 84,
+          "cv": 0.2819720346267661,
+          "mean": 27.9
+        },
+        "slant": {
+          "score": 72,
+          "deg": 22.93210043758978,
+          "dev": 5.878693305383273
+        },
+        "parallel": {
+          "score": 68,
+          "dev": 5.878693305383273
+        },
+        "glyphs": {
+          "score": 93,
+          "cv": 0.36705765500849163
+        },
+        "line": {
+          "score": 100,
+          "rmse": 19.556869323277166,
+          "xh": 0.7009630581819773
+        },
+        "spacing": {
+          "score": 87,
+          "cv": 0.36832337419779254,
+          "n": 27
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 31.75854837066072
+        },
+        "pressure": {
+          "score": 98,
+          "cv": 0.21858805302748732
+        },
+        "clarity": {
+          "score": 75,
+          "cv": 0.36705765500849163
+        },
+        "rows": 2
+      }
+    },
+    {
+      "id": "sample-017",
+      "file": "images/sample-017.jpg",
+      "rows": 2,
+      "raw_rows": 2,
+      "components": 88,
+      "core_components": 51,
+      "orange_rows": 0,
+      "red_outliers": 1,
+      "score": 86,
+      "crop": {
+        "left": 6,
+        "top": 7,
+        "width": 872,
+        "height": 135
+      },
+      "deskew_angle_deg": -0.1,
+      "metrics": {
+        "height": {
+          "score": 97,
+          "cv": 0.21959147632041032,
+          "mean": 32.705882352941174
+        },
+        "slant": {
+          "score": 68,
+          "deg": 21.801409486351815,
+          "dev": 6.499346279654553
+        },
+        "parallel": {
+          "score": 64,
+          "dev": 6.499346279654553
+        },
+        "glyphs": {
+          "score": 91,
+          "cv": 0.38404153137613056
+        },
+        "line": {
+          "score": 100,
+          "rmse": 18.237344242100946,
+          "xh": 0.5576166404958923
+        },
+        "spacing": {
+          "score": 81,
+          "cv": 0.43767661483249604,
+          "n": 22
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 42.138379341589726
+        },
+        "pressure": {
+          "score": 89,
+          "cv": 0.28703089881100163
+        },
+        "clarity": {
+          "score": 72,
+          "cv": 0.38404153137613056
+        },
+        "rows": 2
+      }
+    },
+    {
+      "id": "sample-018",
+      "file": "images/sample-018.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 37,
+      "core_components": 20,
+      "orange_rows": 0,
+      "red_outliers": 4,
+      "score": 74,
+      "crop": {
+        "left": 7,
+        "top": 8,
+        "width": 877,
+        "height": 111
+      },
+      "deskew_angle_deg": 0,
+      "metrics": {
+        "height": {
+          "score": 68,
+          "cv": 0.3196071969317627,
+          "mean": 27.5
+        },
+        "slant": {
+          "score": 71,
+          "deg": 10.007979801441337,
+          "dev": 5.922363021466452
+        },
+        "parallel": {
+          "score": 68,
+          "dev": 5.922363021466452
+        },
+        "glyphs": {
+          "score": 35,
+          "cv": 0.8923090096549776
+        },
+        "line": {
+          "score": 100,
+          "rmse": 2.5722409816607272,
+          "xh": 0.09353603569675371
+        },
+        "spacing": {
+          "score": 94,
+          "cv": 0.28666902874330163,
+          "n": 8
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 72,
+          "cv": 0.4239972864505162
+        },
+        "clarity": {
+          "score": 52,
+          "cv": 0.8923090096549776
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-019",
+      "file": "images/sample-019.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 33,
+      "core_components": 24,
+      "orange_rows": 0,
+      "red_outliers": 2,
+      "score": 87,
+      "crop": {
+        "left": 14,
+        "top": 10,
+        "width": 741,
+        "height": 111
+      },
+      "deskew_angle_deg": 0.9,
+      "metrics": {
+        "height": {
+          "score": 87,
+          "cv": 0.23652385703677795,
+          "mean": 42.083333333333336
+        },
+        "slant": {
+          "score": 73,
+          "deg": 22.750976342787638,
+          "dev": 5.73045073126778
+        },
+        "parallel": {
+          "score": 70,
+          "dev": 5.73045073126778
+        },
+        "glyphs": {
+          "score": 92,
+          "cv": 0.3757637981442894
+        },
+        "line": {
+          "score": 100,
+          "rmse": 18.612927458054727,
+          "xh": 0.4422873851418945
+        },
+        "spacing": {
+          "score": 94,
+          "cv": 0.2857142857142857,
+          "n": 2
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.16939589624734472
+        },
+        "clarity": {
+          "score": 75,
+          "cv": 0.3757637981442894
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-020",
+      "file": "images/sample-020.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 40,
+      "core_components": 33,
+      "orange_rows": 0,
+      "red_outliers": 4,
+      "score": 84,
+      "crop": {
+        "left": 7,
+        "top": 13,
+        "width": 887,
+        "height": 67
+      },
+      "deskew_angle_deg": 0.4,
+      "metrics": {
+        "height": {
+          "score": 81,
+          "cv": 0.29300542923997375,
+          "mean": 16.848484848484848
+        },
+        "slant": {
+          "score": 80,
+          "deg": 10.007979801441337,
+          "dev": 4.526475279098776
+        },
+        "parallel": {
+          "score": 78,
+          "dev": 4.526475279098776
+        },
+        "glyphs": {
+          "score": 79,
+          "cv": 0.48811469823195747
+        },
+        "line": {
+          "score": 100,
+          "rmse": 3.7100815548963584,
+          "xh": 0.22020268221507164
+        },
+        "spacing": {
+          "score": 71,
+          "cv": 0.5593285240336067,
+          "n": 15
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 87,
+          "cv": 0.3008696629489567
+        },
+        "clarity": {
+          "score": 72,
+          "cv": 0.48811469823195747
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-021",
+      "file": "images/sample-021.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 47,
+      "core_components": 31,
+      "orange_rows": 0,
+      "red_outliers": 1,
+      "score": 77,
+      "crop": {
+        "left": 0,
+        "top": 0,
+        "width": 890,
+        "height": 77
+      },
+      "deskew_angle_deg": -0.8,
+      "metrics": {
+        "height": {
+          "score": 95,
+          "cv": 0.23475755333197376,
+          "mean": 28.580645161290324
+        },
+        "slant": {
+          "score": 52,
+          "deg": 15.255118703057775,
+          "dev": 8.890423257363878
+        },
+        "parallel": {
+          "score": 47,
+          "dev": 8.890423257363878
+        },
+        "glyphs": {
+          "score": 76,
+          "cv": 0.5143079279307908
+        },
+        "line": {
+          "score": 100,
+          "rmse": 6.106645210349297,
+          "xh": 0.21366365860138625
+        },
+        "spacing": {
+          "score": 51,
+          "cv": 0.7942991804129056,
+          "n": 4
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 94,
+          "cv": 0.25015335556842566
+        },
+        "clarity": {
+          "score": 73,
+          "cv": 0.5143079279307908
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-022",
+      "file": "images/sample-022.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 48,
+      "core_components": 34,
+      "orange_rows": 0,
+      "red_outliers": 5,
+      "score": 91,
+      "crop": {
+        "left": 0,
+        "top": 5,
+        "width": 894,
+        "height": 78
+      },
+      "deskew_angle_deg": -1.5,
+      "metrics": {
+        "height": {
+          "score": 76,
+          "cv": 0.27340966385653276,
+          "mean": 29.323529411764707
+        },
+        "slant": {
+          "score": 88,
+          "deg": 27.97947438848015,
+          "dev": 3.302611218143106
+        },
+        "parallel": {
+          "score": 87,
+          "dev": 3.302611218143106
+        },
+        "glyphs": {
+          "score": 100,
+          "cv": 0.2157945203109545
+        },
+        "line": {
+          "score": 100,
+          "rmse": 9.687233475284216,
+          "xh": 0.33035700918722505
+        },
+        "spacing": {
+          "score": 100,
+          "cv": 0.14060741974586863,
+          "n": 12
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 92,
+          "cv": 0.26438620364856547
+        },
+        "clarity": {
+          "score": 78,
+          "cv": 0.2157945203109545
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-023",
+      "file": "images/sample-023.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 45,
+      "core_components": 31,
+      "orange_rows": 0,
+      "red_outliers": 2,
+      "score": 83,
+      "crop": {
+        "left": 14,
+        "top": 4,
+        "width": 705,
+        "height": 96
+      },
+      "deskew_angle_deg": 1.3,
+      "metrics": {
+        "height": {
+          "score": 90,
+          "cv": 0.20922311641821598,
+          "mean": 27.64516129032258
+        },
+        "slant": {
+          "score": 74,
+          "deg": 10.885527054658724,
+          "dev": 5.445195023653227
+        },
+        "parallel": {
+          "score": 72,
+          "dev": 5.445195023653227
+        },
+        "glyphs": {
+          "score": 58,
+          "cv": 0.6818854692177999
+        },
+        "line": {
+          "score": 100,
+          "rmse": 10.321060449794354,
+          "xh": 0.37334057636362306
+        },
+        "spacing": {
+          "score": 90,
+          "cv": 0.3355654014829299,
+          "n": 8
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 94,
+          "cv": 0.2464539155829577
+        },
+        "clarity": {
+          "score": 55,
+          "cv": 0.6818854692177999
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "sample-024",
+      "file": "images/sample-024.jpg",
+      "rows": 1,
+      "raw_rows": 1,
+      "components": 48,
+      "core_components": 23,
+      "orange_rows": 0,
+      "red_outliers": 5,
+      "score": 79,
+      "crop": {
+        "left": 14,
+        "top": 14,
+        "width": 861,
+        "height": 89
+      },
+      "deskew_angle_deg": -1.4,
+      "metrics": {
+        "height": {
+          "score": 65,
+          "cv": 0.3669314145141822,
+          "mean": 18.869565217391305
+        },
+        "slant": {
+          "score": 76,
+          "deg": 20.556045219583467,
+          "dev": 5.153908561227794
+        },
+        "parallel": {
+          "score": 74,
+          "dev": 5.153908561227794
+        },
+        "glyphs": {
+          "score": 88,
+          "cv": 0.4087568970842439
+        },
+        "line": {
+          "score": 100,
+          "rmse": 6.331596791378328,
+          "xh": 0.33554545207765335
+        },
+        "spacing": {
+          "score": 50,
+          "cv": 0.806752527276878,
+          "n": 12
+        },
+        "lines": {
+          "score": 100,
+          "cv": 0,
+          "median": 0
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.17903474248409612
+        },
+        "clarity": {
+          "score": 73,
+          "cv": 0.4087568970842439
+        },
+        "rows": 1
+      }
+    },
+    {
+      "id": "synthetic-001",
+      "file": "images/synthetic-001.jpg",
+      "rows": 9,
+      "raw_rows": 9,
+      "components": 297,
+      "core_components": 205,
+      "orange_rows": 2,
+      "red_outliers": 21,
+      "score": 79,
+      "crop": {
+        "left": 22,
+        "top": 20,
+        "width": 860,
+        "height": 641
+      },
+      "deskew_angle_deg": -0.0,
+      "metrics": {
+        "height": {
+          "score": 84,
+          "cv": 0.30647503873271187,
+          "mean": 12.663414634146342
+        },
+        "slant": {
+          "score": 82,
+          "deg": 23.629377730656813,
+          "dev": 4.267893300290815
+        },
+        "parallel": {
+          "score": 80,
+          "dev": 4.267893300290815
+        },
+        "glyphs": {
+          "score": 100,
+          "cv": 0.3013091393218198
+        },
+        "line": {
+          "score": 78,
+          "rmse": 3.2911595002110516,
+          "xh": 0.25989510691188966
+        },
+        "spacing": {
+          "score": 58,
+          "cv": 0.7107792063922518,
+          "n": 105
+        },
+        "lines": {
+          "score": 41,
+          "cv": 0.425257517431935,
+          "median": 53.19860262931036
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.20063194801666023
+        },
+        "clarity": {
+          "score": 84,
+          "cv": 0.3013091393218198
+        },
+        "rows": 9
+      }
+    },
+    {
+      "id": "synthetic-002",
+      "file": "images/synthetic-002.jpg",
+      "rows": 5,
+      "raw_rows": 5,
+      "components": 135,
+      "core_components": 103,
+      "orange_rows": 1,
+      "red_outliers": 24,
+      "score": 75,
+      "crop": {
+        "left": 27,
+        "top": 26,
+        "width": 853,
+        "height": 521
+      },
+      "deskew_angle_deg": -0.2,
+      "metrics": {
+        "height": {
+          "score": 63,
+          "cv": 0.34803015286504035,
+          "mean": 17.339805825242717
+        },
+        "slant": {
+          "score": 72,
+          "deg": 17.35402463626133,
+          "dev": 5.844565877386856
+        },
+        "parallel": {
+          "score": 69,
+          "dev": 5.844565877386856
+        },
+        "glyphs": {
+          "score": 89,
+          "cv": 0.39946949960986894
+        },
+        "line": {
+          "score": 80,
+          "rmse": 2.8121539572085896,
+          "xh": 0.16217909159713592
+        },
+        "spacing": {
+          "score": 77,
+          "cv": 0.4914833468231949,
+          "n": 35
+        },
+        "lines": {
+          "score": 58,
+          "cv": 0.3284966760320494,
+          "median": 135.28592225885316
+        },
+        "pressure": {
+          "score": 97,
+          "cv": 0.22461948598065543
+        },
+        "clarity": {
+          "score": 83,
+          "cv": 0.39946949960986894
+        },
+        "rows": 5
+      }
+    },
+    {
+      "id": "synthetic-003",
+      "file": "images/synthetic-003.jpg",
+      "rows": 4,
+      "raw_rows": 4,
+      "components": 92,
+      "core_components": 63,
+      "orange_rows": 0,
+      "red_outliers": 8,
+      "score": 84,
+      "crop": {
+        "left": 39,
+        "top": 39,
+        "width": 768,
+        "height": 653
+      },
+      "deskew_angle_deg": 0.9,
+      "metrics": {
+        "height": {
+          "score": 80,
+          "cv": 0.3041701101887175,
+          "mean": 22.793650793650794
+        },
+        "slant": {
+          "score": 76,
+          "deg": 16.92751306414705,
+          "dev": 5.238143888707867
+        },
+        "parallel": {
+          "score": 73,
+          "dev": 5.238143888707867
+        },
+        "glyphs": {
+          "score": 84,
+          "cv": 0.4432976146444983
+        },
+        "line": {
+          "score": 100,
+          "rmse": 2.2693085892292197,
+          "xh": 0.09955880300935992
+        },
+        "spacing": {
+          "score": 73,
+          "cv": 0.534013339074459,
+          "n": 28
+        },
+        "lines": {
+          "score": 90,
+          "cv": 0.1416827995352007,
+          "median": 173.70114646658573
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.16762713822557548
+        },
+        "clarity": {
+          "score": 85,
+          "cv": 0.4432976146444983
+        },
+        "rows": 4
+      }
+    },
+    {
+      "id": "synthetic-004",
+      "file": "images/synthetic-004.jpg",
+      "rows": 6,
+      "raw_rows": 6,
+      "components": 135,
+      "core_components": 112,
+      "orange_rows": 0,
+      "red_outliers": 11,
+      "score": 82,
+      "crop": {
+        "left": 25,
+        "top": 21,
+        "width": 850,
+        "height": 661
+      },
+      "deskew_angle_deg": -0.4,
+      "metrics": {
+        "height": {
+          "score": 84,
+          "cv": 0.27227633880847096,
+          "mean": 26.428571428571427
+        },
+        "slant": {
+          "score": 74,
+          "deg": 23.629377730656813,
+          "dev": 5.568108315407656
+        },
+        "parallel": {
+          "score": 71,
+          "dev": 5.568108315407656
+        },
+        "glyphs": {
+          "score": 100,
+          "cv": 0.28689104171739044
+        },
+        "line": {
+          "score": 100,
+          "rmse": 11.450463586073722,
+          "xh": 0.43326078433792464
+        },
+        "spacing": {
+          "score": 75,
+          "cv": 0.5090580278481065,
+          "n": 39
+        },
+        "lines": {
+          "score": 39,
+          "cv": 0.4404257979511527,
+          "median": 117.19668198349467
+        },
+        "pressure": {
+          "score": 100,
+          "cv": 0.1963108258065948
+        },
+        "clarity": {
+          "score": 80,
+          "cv": 0.28689104171739044
+        },
+        "rows": 6
+      }
+    },
+    {
+      "id": "synthetic-005",
+      "file": "images/synthetic-005.jpg",
+      "rows": 4,
+      "raw_rows": 4,
+      "components": 89,
+      "core_components": 64,
+      "orange_rows": 1,
+      "red_outliers": 3,
+      "score": 81,
+      "crop": {
+        "left": 24,
+        "top": 18,
+        "width": 842,
+        "height": 566
+      },
+      "deskew_angle_deg": -1,
+      "metrics": {
+        "height": {
+          "score": 93,
+          "cv": 0.22828886112391095,
+          "mean": 26.765625
+        },
+        "slant": {
+          "score": 83,
+          "deg": 25.20112364547508,
+          "dev": 4.1636126200532715
+        },
+        "parallel": {
+          "score": 81,
+          "dev": 4.1636126200532715
+        },
+        "glyphs": {
+          "score": 100,
+          "cv": 0.2592936154446362
+        },
+        "line": {
+          "score": 75,
+          "rmse": 2.2447996105649723,
+          "xh": 0.08386875369302874
+        },
+        "spacing": {
+          "score": 74,
+          "cv": 0.5256135013266205,
+          "n": 23
+        },
+        "lines": {
+          "score": 26,
+          "cv": 0.514399984093527,
+          "median": 97.14157509828223
+        },
+        "pressure": {
+          "score": 97,
+          "cv": 0.2210009437300199
+        },
+        "clarity": {
+          "score": 94,
+          "cv": 0.2592936154446362
+        },
+        "rows": 4
+      }
+    },
+    {
+      "id": "synthetic-006",
+      "file": "images/synthetic-006.jpg",
+      "rows": 4,
+      "raw_rows": 4,
+      "components": 119,
+      "core_components": 92,
+      "orange_rows": 0,
+      "red_outliers": 9,
+      "score": 82,
+      "crop": {
+        "left": 27,
+        "top": 25,
+        "width": 846,
+        "height": 552
+      },
+      "deskew_angle_deg": -0.5,
+      "metrics": {
+        "height": {
+          "score": 84,
+          "cv": 0.26140881895317997,
+          "mean": 24.51086956521739
+        },
+        "slant": {
+          "score": 65,
+          "deg": 21.801409486351815,
+          "dev": 6.8090501796133935
+        },
+        "parallel": {
+          "score": 62,
+          "dev": 6.8090501796133935
+        },
+        "glyphs": {
+          "score": 97,
+          "cv": 0.32437249895865733
+        },
+        "line": {
+          "score": 100,
+          "rmse": 8.11474893701727,
+          "xh": 0.3310673623971569
+        },
+        "spacing": {
+          "score": 69,
+          "cv": 0.5890536128447641,
+          "n": 31
+        },
+        "lines": {
+          "score": 84,
+          "cv": 0.17143014886350125,
+          "median": 175.58904035957127
+        },
+        "pressure": {
+          "score": 96,
+          "cv": 0.23315657154346292
+        },
+        "clarity": {
+          "score": 78,
+          "cv": 0.32437249895865733
+        },
+        "rows": 4
+      }
+    }
+  ]
+}
