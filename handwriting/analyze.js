@@ -504,7 +504,7 @@
     for (const c of fillItems) { ctx.beginPath(); ctx.arc(c.cx, c.cy, Math.max(4, Math.min(8, c.h * .18)), 0, Math.PI * 2); ctx.stroke(); }
 
     // 9) Регулярность форм — бирюзовые точки на элементах с наибольшим
-    // отклонением формы; 10-й цвет для итогового индекса остаётся в карточке.
+    // отклонением формы; итоговый цвет остаётся в карточке и рамке.
     const clarityItems = shapeItems.slice(0, 8);
     ctx.fillStyle = C.clarity;
     for (const c of clarityItems) { ctx.beginPath(); ctx.arc(c.maxx + 4, c.miny - 3, 2.8, 0, Math.PI * 2); ctx.fill(); }
@@ -535,5 +535,46 @@
     return canvas;
   }
 
-  global.HandwritingAnalyzer = { analyse, draw };
+  function drawFocus(res, canvas, mode) {
+    const source = res.displayCanvas || res.canvas;
+    canvas.width = source.width; canvas.height = source.height;
+    const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(source, 0, 0);
+    if (mode === 'clean') return canvas;
+    const W = source.width, H = source.height, xh = res.metrics.height.mean || 20;
+    const lineOn = mode === 'all' || mode === 'line';
+    const slantOn = mode === 'all' || mode === 'slant';
+    const spacingOn = mode === 'all' || mode === 'spacing';
+    if (lineOn) {
+      for (const l of res.lines) {
+        const bad = res.unstableLines && res.unstableLines.includes(l);
+        ctx.strokeStyle = bad ? '#e47762' : '#2e8c87'; ctx.lineWidth = Math.max(2.5, xh * .11);
+        ctx.beginPath(); ctx.moveTo(0, l.b + 3); ctx.lineTo(W, l.a * W + l.b + 3); ctx.stroke();
+      }
+      mark(ctx, 18, Math.max(28, (res.lines[0]?.b || 32) - 12), '1', '#2e8c87');
+    }
+    const arrows = res.core.filter(c => c.h >= Math.max(7, xh * .58) && c.n >= 20).sort((a,b)=>a.cy-b.cy||a.minx-b.minx).slice(0, 14);
+    if (slantOn) {
+      for (const c of arrows) {
+        const len = Math.max(18, Math.min(38, c.h * 1.1)), x = c.cx, y = Math.min(c.maxy + len*.18, c.miny + c.h*.96), tx = x + Math.max(-10, Math.min(10, (c.w-c.h)*.12)), ty = y-len, a = Math.atan2(ty-y, tx-x);
+        ctx.strokeStyle='rgba(255,255,255,.9)'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(tx,ty); ctx.stroke();
+        ctx.strokeStyle='#1683c5'; ctx.fillStyle='#1683c5'; ctx.lineWidth=2.8; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(tx,ty); ctx.stroke();
+        const ah=6; ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(tx-ah*Math.cos(a-.52),ty-ah*Math.sin(a-.52)); ctx.lineTo(tx-ah*Math.cos(a+.52),ty-ah*Math.sin(a+.52)); ctx.closePath(); ctx.fill();
+      }
+      const first=arrows[0]; if(first) mark(ctx, Math.min(W-24, first.cx+16), Math.max(26, first.miny-10), '2', '#1683c5');
+    }
+    if (spacingOn) {
+      let best=null;
+      for (const row of res.lines) { const rc=rowComponents(res.core,row); for(let i=1;i<rc.length;i++){const gap=rc[i].minx-rc[i-1].maxx; if(gap>Math.max(3,xh*.45)&&gap<xh*4&&(!best||gap>best.gap)) best={a:rc[i-1],b:rc[i],gap};} }
+      if(best){ const y=Math.min(best.a.maxy,best.b.maxy)+6; ctx.strokeStyle='#f0b936'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(best.a.maxx+2,y); ctx.lineTo(best.b.minx-2,y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(best.a.maxx+2,y-5); ctx.lineTo(best.a.maxx+2,y+5); ctx.moveTo(best.b.minx-2,y-5); ctx.lineTo(best.b.minx-2,y+5); ctx.stroke(); mark(ctx, Math.min(W-24,(best.a.maxx+best.b.minx)/2), Math.max(26,y-18), '3', '#d9a51d'); }
+    }
+    return canvas;
+  }
+
+  function mark(ctx, x, y, text, color) {
+    ctx.fillStyle='rgba(255,255,255,.94)'; ctx.beginPath(); ctx.arc(x,y,14,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=color; ctx.beginPath(); ctx.arc(x,y,11,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font='800 13px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(text,x,y);
+  }
+
+  global.HandwritingAnalyzer = { analyse, draw, drawFocus };
 })(window);

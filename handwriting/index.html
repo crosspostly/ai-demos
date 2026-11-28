@@ -29,6 +29,7 @@
   .crop-card{background:#f8fbff;border:1px solid #cbdcf3}.crop-wrap{position:relative;border-radius:14px;overflow:hidden;background:#e8eef6;touch-action:none}.crop-wrap canvas{width:100%;height:auto;display:block;cursor:crosshair}.crop-help{font-size:13px;color:#53677f;margin:0 0 10px}.crop-actions{display:flex;gap:8px;margin-top:10px}.crop-actions .btn{font-size:14px;padding:11px 10px}
   details{border-top:1px solid var(--line);padding:12px 0}summary{font-weight:700;cursor:pointer}.metric{margin:15px 0}.metric .lbl{display:flex;justify-content:space-between;font-size:15px;margin-bottom:5px}.metric b{color:var(--metric-color,var(--accent))}.metric-key{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:1px;box-shadow:0 0 0 2px rgba(0,0,0,.04)}
   .legend{display:grid;grid-template-columns:1fr 1fr;gap:7px 12px;font-size:12px;color:var(--muted);margin-top:8px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+  .focus-card{background:#fffdf8;border-color:#e8e1d8;box-shadow:0 14px 32px rgba(78,68,48,.08)}.focus-canvas{width:100%;height:auto;display:block;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1px #eee7dc}.focus-switch{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}.focus-switch button{border:1px solid #d9e3df;background:#fff;border-radius:99px;padding:8px 11px;font:inherit;font-size:13px;font-weight:750;color:#52615b;cursor:pointer}.focus-switch button.active{background:#2e8c87;color:#fff;border-color:#2e8c87}.focus-zones{display:grid;gap:9px;margin-top:12px}.focus-zone{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;text-align:left;border:1px solid #e8e1d8;border-radius:15px;background:#fff;padding:11px;cursor:pointer}.focus-zone.active{border-color:#2e8c87;box-shadow:0 0 0 2px rgba(46,140,135,.12)}.focus-dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:850}.focus-zone b{font-size:14px}.focus-zone small{display:block;color:#718079;font-size:12px;margin-top:2px}.focus-state{font-size:12px;font-weight:800;color:#2e8c87}.focus-lesson{background:#fff4d9;border:1px solid #f0d99a;border-radius:15px;padding:12px;margin-top:12px}.focus-lesson b{display:block;margin-bottom:3px}.focus-lesson p{font-size:14px;margin:0;color:#5f5132}
   .warn{background:#fff7e6;border:1px solid #f0dcae;color:#6b4a00;border-radius:13px;padding:12px;font-size:14px}.notice{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:12px;font-size:14px}.error{color:var(--danger);font-size:14px}.pill{display:inline-block;background:var(--accent2);color:var(--accent);border-radius:99px;padding:4px 9px;font-size:12px;font-weight:700}.day{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}.day:first-child{border-top:0}.day-n{min-width:44px;color:var(--accent);font-weight:800}.locked{color:var(--muted)}
 </style>
 <script src="analyze.js"></script>
@@ -64,8 +65,16 @@
   </div>
 
   <div id="result" class="hide">
-    <h2>Карта почерка</h2>
-    <div class="card" style="padding:12px">
+    <h2>Что видно в этом листе</h2>
+    <div class="card focus-card">
+      <div class="row between" style="align-items:flex-start"><div><span class="pill">3 наблюдения вместо общей оценки</span><h3 style="margin-top:9px">Посмотрите на конкретные места</h3><p class="tiny">Нажмите на карточку — подсветим только этот признак. Можно вернуть чистое фото.</p></div><div class="focus-state" id="focus-state">Все</div></div>
+      <canvas id="focus-canvas" class="focus-canvas"></canvas>
+      <div class="focus-switch" aria-label="Режим подсветки"><button type="button" data-focus="all" class="active">Все 3</button><button type="button" data-focus="line">Строки</button><button type="button" data-focus="slant">Штрихи</button><button type="button" data-focus="spacing">Пробелы</button><button type="button" data-focus="clean">Чистое фото</button></div>
+      <div class="focus-zones" id="focus-zones"></div>
+      <div class="focus-lesson"><b>Один шаг на сегодня</b><p id="focus-lesson-text">Напишите одну строку медленнее и сравните, одинаково ли держатся интервалы.</p></div>
+      <details style="margin-top:12px"><summary>Как это посчитано</summary><p class="tiny" style="margin:8px 0 0">Фото сначала выравнивается, затем Canvas ищет видимые строки и элементы только внутри выбранного вами кропа. Это наблюдение по одному образцу, а не оценка личности, способностей или здоровья ребёнка.</p></details>
+    </div>
+    <div class="card hide" style="padding:12px" id="technical-overlay">
       <canvas id="overlay" style="width:100%;height:auto;border-radius:10px;display:block"></canvas>
       <div class="viz-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;align-items:stretch">
         <div class="notice" style="font-size:12px;padding:10px"><b>10 цветов = 10 показателей</b><div class="legend">
@@ -91,7 +100,7 @@
       <div class="kid-footer" id="kid-footer">Первая миссия займёт 5–10 минут. Не на скорость — на суперсилу.</div>
     </div>
 
-    <div class="card adult-details">
+    <div class="card adult-details" id="adult-summary">
       <div class="row between" style="align-items:center">
         <div><div class="tiny">Индекс регулярности</div><div class="num" id="score">—<span style="font-size:18px;color:var(--muted)">/100</span></div></div>
         <div style="text-align:right" class="tiny" id="rowsline"></div>
@@ -99,7 +108,7 @@
       <p class="tiny" style="margin:6px 0 0">Это индекс ровности следа на фото, а не оценка способностей ребёнка и не диагноз.</p>
     </div>
 
-    <div class="card" id="metrics">
+    <div class="card" id="metrics" style="display:none">
       <div class="metric" style="--metric-color:#1683c5"><div class="lbl"><span><i class="metric-key" style="background:#1683c5"></i>Ровность наклона</span><b id="m-slant">—</b></div><div class="bar"><span id="b-slant" style="width:0%"></span></div><div class="tiny" id="t-slant"></div></div>
       <div class="metric" style="--metric-color:#7057c8"><div class="lbl"><span><i class="metric-key" style="background:#7057c8"></i>Параллельность штрихов</span><b id="m-parallel">—</b></div><div class="bar"><span id="b-parallel" style="width:0%"></span></div><div class="tiny" id="t-parallel"></div></div>
       <div class="metric" style="--metric-color:#d94c4c"><div class="lbl"><span><i class="metric-key" style="background:#d94c4c"></i>Одинаковая высота букв</span><b id="m-height">—</b></div><div class="bar"><span id="b-height" style="width:0%"></span></div><div class="tiny" id="t-height"></div></div>
@@ -244,8 +253,14 @@
     document.getElementById('kid-progress-bar').style.width=(33+Math.min(66, scores[0].v/2))+'%';
   }
   document.querySelectorAll('.gender-btn').forEach(b=>b.addEventListener('click',()=>{kidGender=b.dataset.gender; if(currentSnapshot) renderKid(Object.keys(metricWords).map(id=>({id,v:currentSnapshot.metrics[id]||0})).sort((a,b)=>a.v-b.v));}));
+  const focusCopy={line:{title:'Ритм строк',note:'Зелёные линии показывают, как текст держится на странице.',state:'видно на строках',color:'#2e8c87'},slant:{title:'Наклон штрихов',note:'Синие стрелки показывают направление отдельных штрихов.',state:'видно на штрихах',color:'#1683c5'},spacing:{title:'Пробелы',note:'Жёлтая отметка показывает самый заметный промежуток между элементами.',state:'видно между элементами',color:'#d9a51d'}};
+  let focusMode='all';
+  function renderFocus(mode){ if(!current)return; focusMode=mode; const cv=document.getElementById('focus-canvas'); window.HandwritingAnalyzer.drawFocus(current,cv,mode); document.querySelectorAll('[data-focus]').forEach(b=>b.classList.toggle('active',b.dataset.focus===mode)); document.getElementById('focus-state').textContent=mode==='clean'?'чистое фото':mode==='all'?'3 зоны':focusCopy[mode]?.title||'зона'; }
+  function buildFocusZones(m){ const zones=[['line',m.line.score<78?'строку стоит проверить':'держится ровно'],['slant',m.slant.score<78?'наклон меняется':'штрихи достаточно ровные'],['spacing',m.spacing.score<78?'интервалы меняются':'интервалы спокойные']]; document.getElementById('focus-zones').innerHTML=zones.map(([id,status])=>{const x=focusCopy[id];return '<button type="button" class="focus-zone" data-zone="'+id+'"><span class="focus-dot" style="background:'+x.color+'">'+(id==='line'?'1':id==='slant'?'2':'3')+'</span><span><b>'+x.title+'</b><small>'+x.note+'</small></span><span class="focus-state">'+status+'</span></button>';}).join(''); document.querySelectorAll('[data-zone]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-zone]').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderFocus(b.dataset.zone);})); }
+  document.querySelectorAll('[data-focus]').forEach(b=>b.addEventListener('click',()=>renderFocus(b.dataset.focus)));
   function render(res){
     current=res; const m=res.metrics; const cv=document.getElementById('overlay'); cv.width=res.displayCanvas?.width||res.canvas.width; cv.height=res.displayCanvas?.height||res.canvas.height; window.HandwritingAnalyzer.draw(res,cv); drawSlantChart(res);
+    buildFocusZones(m); renderFocus('all'); document.getElementById('focus-lesson-text').textContent=m.spacing.score<78?'Напишите одну строку медленнее и оставляйте между элементами спокойные одинаковые промежутки.':m.line.score<78?'Напишите одну строку, стараясь мягко возвращать буквы на нижнюю линию.':'Напишите одну строку в обычном темпе и сравните её с этой картинкой через неделю.';
     document.getElementById('score').innerHTML=res.score+'<span style="font-size:18px;color:var(--muted)">/100</span>';
     document.getElementById('rowsline').innerHTML='строк найдено: '+m.rows+'<br>элементов: '+res.core.length+'<br>оранжевых строк: '+res.unstableLines.length+'<br>наклон исправлен: '+(res.pageSkewDeg||0).toFixed(1)+'°'+(res.crop?'<br>лишние поля обрезаны':'');
     put('slant',m.slant.score,'Синие стрелки: средний наклон '+val(m.slant.deg)+'°, разброс ±'+val(m.slant.dev)+'°.'); put('parallel',m.parallel.score,'Фиолетовые точки: разброс направлений ±'+val(m.parallel.dev)+'°. Эвристика.'); put('height',m.height.score,'Красные отметки: '+res.outliers.length+' выбивающихся элементов из '+res.core.length+'.'); put('glyphs',m.glyphs.score,'Розовые рамки: элементы с необычной формой.'); put('line',m.line.score,'Зелёные линии: оранжевых строк '+res.unstableLines.length+' из '+m.rows+'.'); put('spacing',m.spacing.score,'Жёлтые скобки: разброс видимых промежутков — '+val(m.spacing.cv*100)+'%.'); put('lines',m.lines.score,'Оранжевые скобки: разброс расстояний — '+val(m.lines.cv*100)+'%.'); put('pressure',m.pressure.score,'Коричневые кружки: разброс толщины/плотности — '+val(m.pressure.cv*100)+'%. Не сила нажима.'); put('clarity',m.clarity.score,'Бирюзовые точки: регулярность форм, не процент читаемости.'); put('summary',res.score,'Сводный индекс по девяти измеримым показателям.');
