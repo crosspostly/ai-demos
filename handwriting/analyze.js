@@ -528,6 +528,10 @@
     // Красные отметки должны оставаться поверх стрелок и однозначно означать высоту.
     ctx.fillStyle = C.height;
     for (const c of res.outliers) ctx.fillRect(c.cx - 1.8, c.miny, 3.6, c.h);
+
+    // 10) Итоговый индекс — тонкая тёмно-синяя рамка всей выбранной области.
+    ctx.strokeStyle = '#25324b'; ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, Math.max(0, W - 2), Math.max(0, H - 2));
     return canvas;
   }
 
