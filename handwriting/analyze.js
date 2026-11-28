@@ -409,24 +409,26 @@
     const ctx = canvas.getContext('2d');
     ctx.drawImage(res.displayCanvas || res.canvas, 0, 0);
     const W = (res.displayCanvas || res.canvas).width, H = (res.displayCanvas || res.canvas).height;
-    ctx.lineWidth = 2;
     const xh = res.metrics.height.mean || 20;
     const rowError = median(res.lines.map(l => l.rmse)) || 1;
     const unstable = l => res.unstableLines ? res.unstableLines.includes(l) : l.rmse > Math.max(rowError * 1.45, xh * 0.13);
+    const C = {
+      slant: '#1683c5', parallel: '#7057c8', height: '#d94c4c', glyphs: '#d33aa5',
+      line: '#35a853', spacing: '#e0aa18', lines: '#ef8a2c', pressure: '#6d4c41',
+      clarity: '#008f8c'
+    };
 
-    // Сначала строки: одна яркая линия на каждую строку, как в эталонной демке.
-    // Не добавляем второй пунктир: он визуально конкурировал с настоящей строкой.
+    // 1) Базовая линия строки: зелёная или оранжевая, одна на каждую строку.
     for (const l of res.lines) {
       const off = 3;
       const y0 = l.b + off, y1 = l.a * W + l.b + off;
-      const color = unstable(l) ? 'rgba(231,145,38,.96)' : 'rgba(65,181,76,.96)';
+      const color = unstable(l) ? C.lines : C.line;
       ctx.lineWidth = Math.max(2.4, Math.min(4, xh * 0.10));
       ctx.strokeStyle = color;
       ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y1); ctx.stroke();
     }
 
-    // Стрелки ставятся на реальные компоненты, но прореживаются по X внутри
-    // строки: получается плотная разметка штрихов, а не россыпь стрелок в шуме.
+    // Общий набор реальных компонентов для всех цветных объяснений.
     const arrowCandidates = res.core
       .filter(c => c.h >= Math.max(7, xh * 0.58) && c.n >= 20)
       .sort((a, b) => a.cy - b.cy || a.minx - b.minx);
@@ -435,24 +437,97 @@
       const near = arrowItems.find(p => Math.abs(p.cy - c.cy) < xh * 0.95 && Math.abs(p.cx - c.cx) < Math.max(16, xh * 0.9));
       if (!near) arrowItems.push(c);
     }
+
+    // 2) Наклон — синие стрелки на самих штрихах.
     for (const c of arrowItems) {
       const len = Math.max(12, Math.min(30, c.h * 0.62));
       const x = c.cx, y = Math.min(c.maxy + len * 0.20, c.miny + c.h * 0.90);
       const tilt = Math.max(-8, Math.min(8, (c.w - c.h) * 0.10));
       const tx = x + tilt, ty = y - len;
-      ctx.strokeStyle = 'rgba(20,132,199,.96)';
-      ctx.fillStyle = 'rgba(20,132,199,.96)';
+      ctx.strokeStyle = C.slant;
+      ctx.fillStyle = C.slant;
       ctx.lineWidth = 1.8;
       ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(tx, ty); ctx.stroke();
       const ah = 4, a = Math.atan2(ty - y, tx - x);
       ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx - ah * Math.cos(a - .55), ty - ah * Math.sin(a - .55)); ctx.lineTo(tx - ah * Math.cos(a + .55), ty - ah * Math.sin(a + .55)); ctx.closePath(); ctx.fill();
+
+      // 3) Параллельность — фиолетовые точки рядом с направлением каждого штриха.
+      ctx.fillStyle = C.parallel;
+      ctx.beginPath(); ctx.arc(x + 5, y + 2, 2.3, 0, Math.PI * 2); ctx.fill();
     }
 
-    // Красная отметка остаётся отдельной сущностью и объясняет именно выброс.
+    // 4) Высота — красные вертикальные отметки только на выбросах.
     for (const c of res.outliers) {
-      ctx.fillStyle = 'rgba(196,60,50,.96)';
+      ctx.fillStyle = C.height;
       ctx.fillRect(c.cx - 1.6, c.miny, 3.2, c.h);
     }
+
+    // 5) Одинаковость элементов — розовые рамки на компонентах, удалённых
+    // от медианного соотношения ширина/высота.
+    const shapeMedian = median(res.core.map(c => c.w / Math.max(1, c.h)));
+    const shapeItems = res.core
+      .map(c => ({ c, d: Math.abs((c.w / Math.max(1, c.h)) - shapeMedian) }))
+      .sort((a, b) => b.d - a.d).slice(0, 12).map(x => x.c);
+    ctx.strokeStyle = C.glyphs; ctx.lineWidth = 1.8;
+    for (const c of shapeItems) ctx.strokeRect(c.minx - 2, c.miny - 2, c.w + 4, c.h + 4);
+
+    // 6) Пробелы — жёлтые скобки между соседними компонентами строки.
+    ctx.strokeStyle = C.spacing; ctx.fillStyle = C.spacing; ctx.lineWidth = 1.8;
+    for (const row of res.lines) {
+      const rc = rowComponents(res.core, row);
+      const gaps = [];
+      for (let i = 1; i < rc.length; i++) {
+        const gap = rc[i].minx - rc[i - 1].maxx;
+        if (gap > Math.max(3, xh * 0.45) && gap < xh * 4) gaps.push({ a: rc[i - 1], b: rc[i], gap });
+      }
+      gaps.sort((a, b) => b.gap - a.gap).slice(0, 5).forEach(g => {
+        const y = Math.min(g.a.maxy, g.b.maxy) + 5;
+        ctx.beginPath(); ctx.moveTo(g.a.maxx + 2, y); ctx.lineTo(g.b.minx - 2, y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(g.a.maxx + 2, y - 3); ctx.lineTo(g.a.maxx + 2, y + 3); ctx.moveTo(g.b.minx - 2, y - 3); ctx.lineTo(g.b.minx - 2, y + 3); ctx.stroke();
+      });
+    }
+
+    // 7) Межстрочный интервал — оранжевые вертикальные скобки между базовыми линиями.
+    ctx.strokeStyle = C.lines; ctx.lineWidth = 2;
+    for (let i = 1; i < res.lines.length; i++) {
+      const yA = res.lines[i - 1].b, yB = res.lines[i].b, x = Math.max(8, W - 12);
+      ctx.beginPath(); ctx.moveTo(x, yA); ctx.lineTo(x, yB); ctx.moveTo(x - 4, yA); ctx.lineTo(x + 4, yA); ctx.moveTo(x - 4, yB); ctx.lineTo(x + 4, yB); ctx.stroke();
+    }
+
+    // 8) Толщина/плотность — коричневые кружки на крайних по заполненности
+    // компонентах. Это визуальный прокси, не измерение силы нажима.
+    const fillMedian = median(res.core.map(c => c.n / Math.max(1, c.w * c.h)));
+    const fillItems = res.core
+      .map(c => ({ c, d: Math.abs(c.n / Math.max(1, c.w * c.h) - fillMedian) }))
+      .sort((a, b) => b.d - a.d).slice(0, 10).map(x => x.c);
+    ctx.strokeStyle = C.pressure; ctx.lineWidth = 1.8;
+    for (const c of fillItems) { ctx.beginPath(); ctx.arc(c.cx, c.cy, Math.max(4, Math.min(8, c.h * .18)), 0, Math.PI * 2); ctx.stroke(); }
+
+    // 9) Регулярность форм — бирюзовые точки на элементах с наибольшим
+    // отклонением формы; 10-й цвет для итогового индекса остаётся в карточке.
+    const clarityItems = shapeItems.slice(0, 8);
+    ctx.fillStyle = C.clarity;
+    for (const c of clarityItems) { ctx.beginPath(); ctx.arc(c.maxx + 4, c.miny - 3, 2.8, 0, Math.PI * 2); ctx.fill(); }
+
+    // Финальный проход: стрелки должны быть читаемы поверх остальных объяснений.
+    // Белая подложка повторяет приём эталонной демки и не даёт цветам сливаться
+    // с синими чернилами фотографии.
+    for (const c of arrowItems) {
+      const len = Math.max(18, Math.min(42, c.h * 1.15));
+      const x = c.cx, y = Math.min(c.maxy + len * 0.18, c.miny + c.h * 0.96);
+      const tilt = Math.max(-10, Math.min(10, (c.w - c.h) * 0.12));
+      const tx = x + tilt, ty = y - len;
+      const a = Math.atan2(ty - y, tx - x), ah = 6;
+      ctx.strokeStyle = 'rgba(255,255,255,.88)'; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(tx, ty); ctx.stroke();
+      ctx.strokeStyle = C.slant; ctx.fillStyle = C.slant; ctx.lineWidth = 2.8;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(tx, ty); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx - ah * Math.cos(a - .52), ty - ah * Math.sin(a - .52)); ctx.lineTo(tx - ah * Math.cos(a + .52), ty - ah * Math.sin(a + .52)); ctx.closePath(); ctx.fill();
+    }
+
+    // Красные отметки должны оставаться поверх стрелок и однозначно означать высоту.
+    ctx.fillStyle = C.height;
+    for (const c of res.outliers) ctx.fillRect(c.cx - 1.8, c.miny, 3.6, c.h);
     return canvas;
   }
 
