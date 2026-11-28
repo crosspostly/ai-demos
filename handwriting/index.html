@@ -90,7 +90,7 @@
     <div class="card" id="week-plan">
       <span class="pill">План на 7 дней</span>
       <h3 style="margin-top:9px">Одна короткая цель за раз</h3>
-      <p class="tiny">Занятие занимает 5–15 минут. Пишите на бумаге и не превращайте практику в наказание.</p>
+      <p class="tiny">Занятие занимает 5–10 минут. Пишите на бумаге и не превращайте практику в наказание.</p>
       <div id="plan-list"></div>
     </div>
 
@@ -107,14 +107,15 @@
         <label class="drop" for="second-file" style="padding:15px"><div class="drop-title">Добавить второе фото</div><div class="tiny">Без регистрации. Фото останется в браузере.</div><input id="second-file" type="file" accept="image/*"></label>
         <button class="btn" id="precision-submit" disabled style="margin-top:10px">Сравнить две страницы</button>
         <div class="tiny" id="precision-note" style="margin-top:8px"></div>
+        <div id="comparison" class="notice hide" style="margin-top:12px"></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="price"><b>490 ₽</b><s>вместо отдельного занятия</s></div>
-      <p class="tiny" style="margin:0 0 10px">Полный разбор: девять метрик, дополнительные пометки на фото, три упражнения, готовый недельный план и повторное сравнение «было/стало».</p>
-      <button class="btn" id="pay">Получить полный разбор</button>
-      <div class="tiny" style="margin-top:8px" id="paynote"></div>
+      <h3>Результат останется на этом телефоне</h3>
+      <p class="tiny" style="margin:0 0 10px">Мы сохраним только показатели и прогресс в браузере. Фото не загружается на сервер. Можно вернуться к плану без регистрации.</p>
+      <button class="btn ghost" id="save-result">Сохранить результат</button>
+      <div class="tiny" style="margin-top:8px" id="save-note"></div>
     </div>
     <button class="btn ghost" id="share">Поделиться результатом</button>
     <button class="btn ghost" id="clear" style="margin-top:10px">Удалить фото из этого разбора</button>
@@ -139,111 +140,52 @@
 </div>
 
 <script>
-  const file = document.getElementById('file');
-  const consent = document.getElementById('consent');
-  const go = document.getElementById('go');
-  const hint = document.getElementById('hint');
-  const quality = document.getElementById('quality');
-  const result = document.getElementById('result');
-  let selectedFile = null;
-
-  function refresh(){
-    go.disabled = !(selectedFile && consent.checked);
-    hint.textContent = go.disabled ? (!selectedFile ? 'Выберите фото страницы тетради.' : 'Подтвердите согласие, чтобы продолжить.') : 'Готово — нажмите «Показать разбор».\n';
-  }
-  file.addEventListener('change', () => {
-    selectedFile = file.files[0] || null;
-    if (!selectedFile) { quality.classList.add('hide'); refresh(); return; }
-    const mb = selectedFile.size / 1024 / 1024;
-    quality.classList.remove('hide');
-    quality.textContent = mb > 12 ? 'Фото большое. Для быстрой обработки лучше снимок до 12 МБ.' : 'Фото выбрано. Проверьте, что весь лист в кадре и на тексте нет тени.';
-    refresh();
-  });
-  consent.addEventListener('change', refresh);
-
-  const val = n => Math.round(n);
-  function put(id, score, note){
-    const value = Math.max(0, Math.min(100, Math.round(score || 0)));
-    document.getElementById('m-' + id).textContent = value;
-    const bar = document.getElementById('b-' + id);
-    bar.style.width = value + '%';
-    bar.style.background = value >= 70 ? 'var(--accent)' : (value >= 45 ? '#c98b1f' : 'var(--danger)');
-    document.getElementById('t-' + id).textContent = note;
-  }
-  function observation(title, text, tone){
-    const el = document.createElement('div'); el.className = 'day';
-    el.innerHTML = '<div class="day-n">' + tone + '</div><div><b>' + title + '</b><div class="tiny">' + text + '</div></div>';
-    document.getElementById('observation-list').appendChild(el);
-  }
+  const file = document.getElementById('file'), consent = document.getElementById('consent'), go = document.getElementById('go');
+  const hint = document.getElementById('hint'), quality = document.getElementById('quality'), result = document.getElementById('result');
+  let selectedFile = null, current = null, currentSnapshot = null;
   const metricWords = {
-    slant: ['Ровность наклона', 'Штрихи заваливаются по-разному.', 'ведём палочки как параллельные рельсы'],
-    parallel: ['Параллельность штрихов', 'Наклонные элементы смотрят под разными углами.', 'держим один угол штриха'],
-    height: ['Высота букв', 'Размер букв заметно меняется.', 'держим буквы между двумя линиями'],
-    glyphs: ['Однообразие элементов', 'Похожие элементы выглядят по-разному.', 'сверяем букву с одним эталоном'],
-    line: ['Базовая линия', 'К концу строки буквы уводит выше или ниже.', 'опираем буквы на нижнюю линию'],
-    spacing: ['Пробелы', 'Слова то слипаются, то разлетаются.', 'оставляем пробел размером с палец'],
-    lines: ['Межстрочный интервал', 'Строки могут быть слишком неравномерными.', 'оставляем одинаковые «рельсы» между строками'],
-    pressure: ['Толщина линии', 'Толщина штриха меняется; это косвенная оценка, не сила нажима.', 'пишем мягко и одинаково'],
-    clarity: ['Регулярность форм', 'Элементы страницы выглядят неодинаково.', 'пишем медленнее и отделяем элементы']
+    slant:['Ровность наклона','Штрихи заваливаются по-разному.','ведём палочки как параллельные рельсы'],
+    parallel:['Параллельность штрихов','Наклонные элементы смотрят под разными углами.','держим один угол штриха'],
+    height:['Высота букв','Размер букв заметно меняется.','держим буквы между двумя линиями'],
+    glyphs:['Регулярность элементов','Похожие элементы выглядят по-разному.','сверяем элемент с одним эталоном'],
+    line:['Базовая линия','К концу строки буквы уводит выше или ниже.','опираем буквы на нижнюю линию'],
+    spacing:['Видимые промежутки','Расстояния между компонентами заметно меняются.','оставляем спокойные одинаковые промежутки'],
+    lines:['Межстрочный интервал','Строки могут быть неравномерными.','оставляем одинаковые «рельсы» между строками'],
+    pressure:['Толщина линии','Толщина штриха меняется; это не сила нажима.','пишем мягко и одинаково'],
+    clarity:['Регулярность форм','Элементы страницы выглядят неодинаково.','пишем медленнее и отделяем элементы']
   };
+  const val = n => Math.round(n || 0);
+  function refresh(){ go.disabled = !(selectedFile && consent.checked); hint.textContent = go.disabled ? (!selectedFile ? 'Выберите фото страницы тетради.' : 'Подтвердите согласие, чтобы продолжить.') : 'Готово — нажмите «Показать разбор».'; }
+  file.addEventListener('change', () => { selectedFile = file.files[0] || null; if (!selectedFile) { quality.classList.add('hide'); refresh(); return; } quality.classList.remove('hide'); quality.textContent = selectedFile.size / 1024 / 1024 > 12 ? 'Фото большое. Для быстрой обработки лучше снимок до 12 МБ.' : 'Фото выбрано. Лучше снять лист сверху, целиком и без тени.'; refresh(); });
+  consent.addEventListener('change', refresh);
+  function put(id, score, note){ const value = Math.max(0, Math.min(100, Math.round(score || 0))); document.getElementById('m-'+id).textContent=value; const bar=document.getElementById('b-'+id); bar.style.width=value+'%'; bar.style.background=value>=70?'var(--accent)':(value>=45?'#c98b1f':'var(--danger)'); document.getElementById('t-'+id).textContent=note; }
+  function observation(title,text,tone){ const el=document.createElement('div'); el.className='day'; el.innerHTML='<div class="day-n">'+tone+'</div><div><b>'+title+'</b><div class="tiny">'+text+'</div></div>'; document.getElementById('observation-list').appendChild(el); }
+  function getSaved(){ try{return JSON.parse(localStorage.getItem('handwriting-review-result')||'null');}catch(e){return null;} }
+  function saveSnapshot(){ if(!currentSnapshot)return; localStorage.setItem('handwriting-review-result',JSON.stringify(currentSnapshot)); document.getElementById('save-note').textContent='Сохранено на этом телефоне. Фото не сохранено.'; }
   function makePlan(primary){
-    const focus = (metricWords[primary] || metricWords.height)[2];
-    const tasks = [
-      ['День 1','Посмотрите на образец и выберите одну букву для тренировки: ' + focus + '.'],
-      ['День 2','«Рельсы»: 2 строки одинаковых элементов медленно, без гонки.'],
-      ['День 3','Напишите 3 строки коротких слов на бумаге, делая паузу после каждой строки.'],
-      ['День 4','Повторите лучшую букву 10 раз и обведите ту, которая получилась стабильнее.'],
-      ['День 5','Напишите 2 предложения, сохраняя цель: ' + focus + '.'],
-      ['День 6','Сделайте короткую практику без подсказки и похвалите усилие, а не идеальность.'],
-      ['День 7','Снимите новую страницу сверху при похожем свете для сравнения.']
-    ];
-    document.getElementById('plan-list').innerHTML = tasks.map((t,i) => '<div class="day"><div class="day-n">' + t[0] + '</div><div class="' + (i > 0 ? 'locked' : '') + '">' + t[1] + (i > 0 ? '<div class="tiny">Откроется после выполнения предыдущего шага в полной версии.</div>' : '') + '</div></div>').join('');
+    const focus=(metricWords[primary]||metricWords.height)[2], done=localStorage.getItem('handwriting-review-exercise-done')==='1';
+    const tasks=[['Сегодня','5–10 минут: '+focus+'.'],['Через 2 дня','«Рельсы»: 2 строки одинаковых элементов медленно, без гонки.'],['Через 4 дня','Напишите 3 строки коротких слов, делая паузу после каждой строки.'],['Через 7 дней','Снимите новую похожую страницу сверху для сравнения.']];
+    document.getElementById('plan-list').innerHTML=tasks.map((t,i)=>'<div class="day"><div class="day-n">'+t[0]+'</div><div><div>'+t[1]+'</div>'+(i===0?'<label class="tiny" style="display:block;margin-top:6px"><input id="done-exercise" type="checkbox" '+(done?'checked':'')+'> Упражнение выполнено</label>':'')+'</div></div>').join('');
+    const cb=document.getElementById('done-exercise'); if(cb) cb.addEventListener('change',()=>{localStorage.setItem('handwriting-review-exercise-done',cb.checked?'1':'0');});
   }
-
-  go.addEventListener('click', () => {
-    if (!selectedFile) return;
-    go.disabled = true; go.textContent = 'Разбираем страницу…';
-    const img = new Image();
-    img.onload = () => {
-      try {
-        const res = window.HandwritingAnalyzer.analyse(img);
-        const cv = document.getElementById('overlay'); cv.width = res.canvas.width; cv.height = res.canvas.height; window.HandwritingAnalyzer.draw(res, cv);
-        document.getElementById('score').innerHTML = res.score + '<span style="font-size:18px;color:var(--muted)">/100</span>';
-        document.getElementById('rowsline').innerHTML = 'строк найдено: ' + res.metrics.rows + '<br>элементов: ' + res.core.length + '<br>наклон страницы исправлен: ' + (res.pageSkewDeg || 0).toFixed(1) + '°';
-        const m = res.metrics;
-        put('slant', m.slant.score, 'Средний наклон ' + val(m.slant.deg) + '°, разброс ±' + val(m.slant.dev) + '°.');
-        put('parallel', m.parallel.score, 'Разброс направлений штрихов ±' + val(m.parallel.dev) + '°. Это эвристика по видимым элементам.');
-        put('height', m.height.score, 'Разброс высоты — ' + val(m.height.cv * 100) + '%.');
-        put('glyphs', m.glyphs.score, 'Повторяемость элементов — эвристика без распознавания букв.');
-        put('line', m.line.score, 'Качание строки — ' + (m.line.xh * 100).toFixed(0) + '% высоты буквы.');
-        put('spacing', m.spacing.score, 'Разброс видимых промежутков — ' + val(m.spacing.cv * 100) + '%.');
-        put('lines', m.lines.score, 'Разброс расстояний между строками — ' + val(m.lines.cv * 100) + '%.');
-        put('pressure', m.pressure.score, 'Разброс толщины/плотности линии — ' + val(m.pressure.cv * 100) + '%. Не сила нажима.');
-        put('clarity', m.clarity.score, 'Композит регулярности элементов — не процент читаемости.');
-        document.getElementById('observation-list').innerHTML = '';
-        const scores = Object.keys(metricWords).map(id => ({id, v: m[id].score})).sort((a,b)=>a.v-b.v);
-        scores.slice(0, 3).forEach((item, index) => observation(metricWords[item.id][0], metricWords[item.id][1], String(index + 1)));
-        makePlan(scores[0].id);
-        result.classList.remove('hide'); result.scrollIntoView({behavior:'smooth', block:'start'});
-      } catch (e) { hint.textContent = 'Не получилось разобрать фото. Снимите лист целиком сверху, при рассеянном свете.'; }
-      go.textContent = 'Показать разбор'; refresh();
-    };
-    img.onerror = () => { hint.textContent = 'Файл не открылся. Попробуйте другое фото.'; go.disabled = false; go.textContent = 'Показать разбор'; };
-    img.src = URL.createObjectURL(selectedFile);
-  });
-  const precisionToggle = document.getElementById('precision-toggle');
-  const precisionForm = document.getElementById('precision-form');
-  const age = document.getElementById('age');
-  const secondFile = document.getElementById('second-file');
-  const precisionSubmit = document.getElementById('precision-submit');
-  precisionToggle.addEventListener('click', () => { precisionForm.classList.toggle('hide'); precisionToggle.textContent = precisionForm.classList.contains('hide') ? 'Уточнить без регистрации' : 'Скрыть уточнение'; });
-  function refreshPrecision(){ precisionSubmit.disabled = !(age.value && secondFile.files.length); }
-  age.addEventListener('change', refreshPrecision); secondFile.addEventListener('change', refreshPrecision);
-  precisionSubmit.addEventListener('click', () => { document.getElementById('precision-note').textContent = 'Готово: для точного сравнения добавлены возраст и второе фото. Сохранение и отправка данных пока не подключены — это демонстрация вовлечения после первого разбора.'; precisionSubmit.disabled = true; });
-  document.getElementById('pay').addEventListener('click', () => { document.getElementById('paynote').textContent = 'Оплата подключается на следующем шаге: карта и СБП. Пока это демонстрация.'; });
-  document.getElementById('share').addEventListener('click', async () => { const text = 'Разбор почерка ребёнка: три наблюдения и план на 7 дней'; if (navigator.share) { try { await navigator.share({title:text,text}); return; } catch(e){} } try { await navigator.clipboard.writeText(location.href); alert('Ссылка скопирована'); } catch(e){} });
-  document.getElementById('clear').addEventListener('click', () => { selectedFile = null; file.value = ''; quality.classList.add('hide'); result.classList.add('hide'); document.getElementById('overlay').getContext('2d').clearRect(0,0,1,1); refresh(); window.scrollTo({top:0,behavior:'smooth'}); });
-  refresh();
+  function render(res){
+    current=res; const m=res.metrics; const cv=document.getElementById('overlay'); cv.width=res.displayCanvas?.width||res.canvas.width; cv.height=res.displayCanvas?.height||res.canvas.height; window.HandwritingAnalyzer.draw(res,cv);
+    document.getElementById('score').innerHTML=res.score+'<span style="font-size:18px;color:var(--muted)">/100</span>';
+    document.getElementById('rowsline').innerHTML='строк найдено: '+m.rows+'<br>элементов: '+res.core.length+'<br>наклон страницы исправлен: '+(res.pageSkewDeg||0).toFixed(1)+'°';
+    put('slant',m.slant.score,'Средний наклон '+val(m.slant.deg)+'°, разброс ±'+val(m.slant.dev)+'°.'); put('parallel',m.parallel.score,'Разброс направлений ±'+val(m.parallel.dev)+'°. Эвристика.'); put('height',m.height.score,'Разброс высоты — '+val(m.height.cv*100)+'%.'); put('glyphs',m.glyphs.score,'Эвристика без распознавания букв.'); put('line',m.line.score,'Качание строки — '+(m.line.xh*100).toFixed(0)+'% высоты буквы.'); put('spacing',m.spacing.score,'Разброс видимых промежутков — '+val(m.spacing.cv*100)+'%.'); put('lines',m.lines.score,'Разброс расстояний — '+val(m.lines.cv*100)+'%.'); put('pressure',m.pressure.score,'Разброс толщины/плотности — '+val(m.pressure.cv*100)+'%. Не сила нажима.'); put('clarity',m.clarity.score,'Индекс регулярности, не процент читаемости.');
+    document.getElementById('observation-list').innerHTML=''; const scores=Object.keys(metricWords).map(id=>({id,v:m[id].score})).sort((a,b)=>a.v-b.v); scores.slice(0,3).forEach((x,i)=>observation(metricWords[x.id][0],metricWords[x.id][1],String(i+1))); currentSnapshot={date:new Date().toISOString(),score:res.score,primary:scores[0].id,metrics:Object.fromEntries(Object.keys(m).filter(k=>m[k]?.score!==undefined).map(k=>[k,m[k].score]))}; makePlan(scores[0].id); saveSnapshot(); result.classList.remove('hide');
+  }
+  function analyseFile(f, done){ const img=new Image(); img.onload=()=>{try{done(window.HandwritingAnalyzer.analyse(img));}catch(e){hint.textContent='Не получилось разобрать фото. Снимите лист целиком сверху, при рассеянном свете.';}}; img.onerror=()=>{hint.textContent='Файл не открылся. Попробуйте другое фото.';}; img.src=URL.createObjectURL(f); }
+  go.addEventListener('click',()=>{if(!selectedFile)return; go.disabled=true; go.textContent='Разбираем страницу…'; analyseFile(selectedFile,res=>{render(res); go.textContent='Показать разбор'; refresh(); result.scrollIntoView({behavior:'smooth',block:'start'});});});
+  const precisionToggle=document.getElementById('precision-toggle'), precisionForm=document.getElementById('precision-form'), age=document.getElementById('age'), secondFile=document.getElementById('second-file'), precisionSubmit=document.getElementById('precision-submit');
+  precisionToggle.addEventListener('click',()=>{precisionForm.classList.toggle('hide'); precisionToggle.textContent=precisionForm.classList.contains('hide')?'Уточнить без регистрации':'Скрыть уточнение';});
+  function refreshPrecision(){precisionSubmit.disabled=!(age.value&&secondFile.files.length);}
+  age.addEventListener('change',refreshPrecision); secondFile.addEventListener('change',refreshPrecision);
+  precisionSubmit.addEventListener('click',()=>{if(!current||!secondFile.files[0])return; precisionSubmit.disabled=true; precisionSubmit.textContent='Сравниваем…'; analyseFile(secondFile.files[0],res=>{const key=currentSnapshot.primary, before=currentSnapshot.metrics[key], after=res.metrics[key].score, diff=after-before; document.getElementById('precision-note').textContent='Возраст сохранён только в этом браузере; он не превращает результат в возрастную норму.'; const cmp=document.getElementById('comparison'); cmp.classList.remove('hide'); cmp.innerHTML='<b>'+metricWords[key][0]+': было '+before+', стало '+after+'</b><br><span class="tiny">'+(diff>=0?'Показатель вырос на ':'Показатель снизился на ')+Math.abs(diff)+' пунктов. Сравнение корректно только для похожих страниц и условий съёмки.</span>'; precisionSubmit.textContent='Сравнение готово';});});
+  document.getElementById('save-result').addEventListener('click',saveSnapshot);
+  document.getElementById('share').addEventListener('click',async()=>{const text='Разбор почерка ребёнка: одна зона роста и короткое упражнение';if(navigator.share){try{await navigator.share({title:text,text});return;}catch(e){}}try{await navigator.clipboard.writeText(location.href);document.getElementById('save-note').textContent='Ссылка скопирована.';}catch(e){}});
+  document.getElementById('clear').addEventListener('click',()=>{selectedFile=null;file.value='';quality.classList.add('hide');result.classList.add('hide');current=null;refresh();window.scrollTo({top:0,behavior:'smooth'});});
+  const saved=getSaved(); if(saved) hint.textContent='На этом телефоне уже есть прошлый результат. Можно загрузить новую страницу для сравнения.'; refresh();
 </script>
 </body>
 </html>
