@@ -23,6 +23,9 @@
   .drop-title{font-weight:700;margin:5px 0 4px}.drop-icon{font-size:27px;color:var(--accent);font-weight:700}.row{display:flex;gap:12px;align-items:baseline}.between{justify-content:space-between}.num{font-size:42px;font-weight:800;letter-spacing:-.04em}.bar{height:10px;background:#e7eee8;border-radius:100px;overflow:hidden}.bar span{display:block;height:100%;background:var(--accent);border-radius:100px;transition:width .35s ease}
   ul{padding-left:20px;margin:0 0 12px}li{margin:0 0 7px}.price{display:flex;align-items:baseline;gap:10px;margin:6px 0 2px}.price b{font-size:31px;letter-spacing:-.02em}.price s{color:var(--muted)}
   .foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.hide{display:none}.ok{color:var(--accent);font-weight:700}
+  .kid-card{position:relative;overflow:hidden;border:0;background:linear-gradient(145deg,#fff8e8 0%,#eef9ff 48%,#f5edff 100%);box-shadow:0 14px 35px rgba(78,75,145,.12);padding:20px}
+  .kid-card:before,.kid-card:after{content:"";position:absolute;border-radius:50%;pointer-events:none}.kid-card:before{width:150px;height:150px;background:rgba(255,190,73,.24);right:-65px;top:-75px}.kid-card:after{width:110px;height:110px;background:rgba(105,180,255,.18);left:-55px;bottom:-58px}
+  .kid-top{position:relative;display:flex;align-items:center;gap:12px;z-index:1}.avatar{width:58px;height:58px;border-radius:20px;display:grid;place-items:center;font-size:30px;background:#ffd46b;border:4px solid #fff;box-shadow:0 5px 0 rgba(0,0,0,.07)}.avatar.girl{background:#f7a7d6}.kid-kicker{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7561b5}.kid-title{font-size:25px;line-height:1.08;font-weight:900;letter-spacing:-.03em;margin:2px 0}.kid-sub{font-size:14px;color:#5d637b}.gender-row{position:relative;display:flex;gap:8px;margin:14px 0 2px;z-index:1}.gender-btn{border:1px solid rgba(91,86,160,.18);background:rgba(255,255,255,.72);border-radius:99px;padding:7px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:#514b77}.gender-btn.active{background:#5b54b4;color:#fff;border-color:#5b54b4}.kid-zones{position:relative;display:grid;gap:10px;margin-top:16px;z-index:1}.quest{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.9);border-radius:17px;padding:11px 12px;box-shadow:0 5px 13px rgba(75,75,140,.07)}.quest.done{opacity:.72}.quest-icon{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;font-weight:900;color:#fff;font-size:19px}.quest:nth-child(1) .quest-icon{background:#ff8b58}.quest:nth-child(2) .quest-icon{background:#54b9a5}.quest:nth-child(3) .quest-icon{background:#7771d8}.quest-name{font-weight:800;font-size:15px}.quest-note{font-size:12px;color:#70758d;margin-top:2px}.quest-score{font-size:20px;font-weight:900;color:#5b54b4}.kid-progress{height:9px;background:rgba(91,84,180,.13);border-radius:99px;overflow:hidden;margin:16px 0 5px;position:relative;z-index:1}.kid-progress span{display:block;height:100%;width:33%;border-radius:99px;background:linear-gradient(90deg,#ff9561,#ffca5f,#6ccab3)}.kid-footer{position:relative;z-index:1;font-size:13px;font-weight:700;color:#5d5b85}.adult-details{margin-top:18px}
   details{border-top:1px solid var(--line);padding:12px 0}summary{font-weight:700;cursor:pointer}.metric{margin:15px 0}.metric .lbl{display:flex;justify-content:space-between;font-size:15px;margin-bottom:5px}.metric b{color:var(--accent)}
   .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
   .warn{background:#fff7e6;border:1px solid #f0dcae;color:#6b4a00;border-radius:13px;padding:12px;font-size:14px}.notice{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:12px;font-size:14px}.error{color:var(--danger);font-size:14px}.pill{display:inline-block;background:var(--accent2);color:var(--accent);border-radius:99px;padding:4px 9px;font-size:12px;font-weight:700}.day{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}.day:first-child{border-top:0}.day-n{min-width:44px;color:var(--accent);font-weight:800}.locked{color:var(--muted)}
@@ -54,7 +57,7 @@
   </div>
 
   <div id="result" class="hide">
-    <h2>Что видно на этой странице</h2>
+    <h2>Карта почерка</h2>
     <div class="card" style="padding:12px">
       <canvas id="overlay" style="width:100%;height:auto;border-radius:10px;display:block"></canvas>
       <div class="viz-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;align-items:stretch">
@@ -64,7 +67,18 @@
       <p class="tiny" style="margin:8px 0 0">Фото выровнено перед расчётом и обработано прямо в браузере — оно никуда не отправлено.</p>
     </div>
 
-    <div class="card">
+    <div class="card kid-card" id="kid-card">
+      <div class="kid-top">
+        <div class="avatar" id="kid-avatar">★</div>
+        <div><div class="kid-kicker">Твоя карта почерка</div><div class="kid-title" id="kid-title">Готово! Нашли твои суперзоны</div><div class="kid-sub" id="kid-sub">Выбери героя — и отправляйся в первую миссию.</div></div>
+      </div>
+      <div class="gender-row"><button class="gender-btn active" data-gender="boy">Герой</button><button class="gender-btn" data-gender="girl">Героиня</button></div>
+      <div class="kid-progress"><span id="kid-progress-bar"></span></div>
+      <div class="kid-zones" id="kid-zones"></div>
+      <div class="kid-footer" id="kid-footer">Первая миссия займёт 5–10 минут. Не на скорость — на суперсилу.</div>
+    </div>
+
+    <div class="card adult-details">
       <div class="row between" style="align-items:center">
         <div><div class="tiny">Индекс регулярности</div><div class="num" id="score">—<span style="font-size:18px;color:var(--muted)">/100</span></div></div>
         <div style="text-align:right" class="tiny" id="rowsline"></div>
@@ -195,12 +209,23 @@
     document.getElementById('plan-list').innerHTML=tasks.map((t,i)=>'<div class="day"><div class="day-n">'+t[0]+'</div><div><div>'+t[1]+'</div>'+(i===0?'<label class="tiny" style="display:block;margin-top:6px"><input id="done-exercise" type="checkbox" '+(done?'checked':'')+'> Упражнение выполнено</label>':'')+'</div></div>').join('');
     const cb=document.getElementById('done-exercise'); if(cb) cb.addEventListener('change',()=>{localStorage.setItem('handwriting-review-exercise-done',cb.checked?'1':'0');});
   }
+  let kidGender='boy';
+  function renderKid(scores){
+    const avatar=document.getElementById('kid-avatar'), title=document.getElementById('kid-title'), sub=document.getElementById('kid-sub');
+    avatar.className='avatar'+(kidGender==='girl'?' girl':''); avatar.textContent=kidGender==='girl'?'✦':'★';
+    title.textContent=kidGender==='girl'?'Готово! Твои суперзоны найдены':'Готово! Твои суперзоны найдены';
+    sub.textContent=kidGender==='girl'?'Выбирай миссию и собирай свою карту навыков.':'Выбирай миссию и собирай свою карту навыков.';
+    document.querySelectorAll('.gender-btn').forEach(b=>b.classList.toggle('active',b.dataset.gender===kidGender));
+    document.getElementById('kid-zones').innerHTML=scores.slice(0,3).map((item,i)=>{const w=metricWords[item.id]; return '<div class="quest"><div class="quest-icon">'+(i+1)+'</div><div><div class="quest-name">Миссия: '+w[0]+'</div><div class="quest-note">'+(i===0?'Главная суперсила на сегодня':i===1?'Следующий уровень':'Бонусная миссия')+'</div></div><div class="quest-score">'+item.v+'</div></div>';}).join('');
+    document.getElementById('kid-progress-bar').style.width=(33+Math.min(66, scores[0].v/2))+'%';
+  }
+  document.querySelectorAll('.gender-btn').forEach(b=>b.addEventListener('click',()=>{kidGender=b.dataset.gender; if(currentSnapshot) renderKid(Object.keys(metricWords).map(id=>({id,v:currentSnapshot.metrics[id]||0})).sort((a,b)=>a.v-b.v));}));
   function render(res){
     current=res; const m=res.metrics; const cv=document.getElementById('overlay'); cv.width=res.displayCanvas?.width||res.canvas.width; cv.height=res.displayCanvas?.height||res.canvas.height; window.HandwritingAnalyzer.draw(res,cv); drawSlantChart(res);
     document.getElementById('score').innerHTML=res.score+'<span style="font-size:18px;color:var(--muted)">/100</span>';
     document.getElementById('rowsline').innerHTML='строк найдено: '+m.rows+'<br>элементов: '+res.core.length+'<br>наклон страницы исправлен: '+(res.pageSkewDeg||0).toFixed(1)+'°';
     put('slant',m.slant.score,'Средний наклон '+val(m.slant.deg)+'°, разброс ±'+val(m.slant.dev)+'°.'); put('parallel',m.parallel.score,'Разброс направлений ±'+val(m.parallel.dev)+'°. Эвристика.'); put('height',m.height.score,'Разброс высоты — '+val(m.height.cv*100)+'%.'); put('glyphs',m.glyphs.score,'Эвристика без распознавания букв.'); put('line',m.line.score,'Качание строки — '+(m.line.xh*100).toFixed(0)+'% высоты буквы.'); put('spacing',m.spacing.score,'Разброс видимых промежутков — '+val(m.spacing.cv*100)+'%.'); put('lines',m.lines.score,'Разброс расстояний — '+val(m.lines.cv*100)+'%.'); put('pressure',m.pressure.score,'Разброс толщины/плотности — '+val(m.pressure.cv*100)+'%. Не сила нажима.'); put('clarity',m.clarity.score,'Индекс регулярности, не процент читаемости.');
-    document.getElementById('observation-list').innerHTML=''; const scores=Object.keys(metricWords).map(id=>({id,v:m[id].score})).sort((a,b)=>a.v-b.v); scores.slice(0,3).forEach((x,i)=>observation(metricWords[x.id][0],metricWords[x.id][1],String(i+1))); currentSnapshot={date:new Date().toISOString(),score:res.score,primary:scores[0].id,metrics:Object.fromEntries(Object.keys(m).filter(k=>m[k]?.score!==undefined).map(k=>[k,m[k].score]))}; makePlan(scores[0].id); saveSnapshot(); result.classList.remove('hide');
+    document.getElementById('observation-list').innerHTML=''; const scores=Object.keys(metricWords).map(id=>({id,v:m[id].score})).sort((a,b)=>a.v-b.v); scores.slice(0,3).forEach((x,i)=>observation(metricWords[x.id][0],metricWords[x.id][1],String(i+1))); currentSnapshot={date:new Date().toISOString(),score:res.score,primary:scores[0].id,metrics:Object.fromEntries(Object.keys(m).filter(k=>m[k]?.score!==undefined).map(k=>[k,m[k].score]))}; renderKid(scores); makePlan(scores[0].id); saveSnapshot(); result.classList.remove('hide');
   }
   function analyseFile(f, done){ const img=new Image(); img.onload=()=>{try{done(window.HandwritingAnalyzer.analyse(img));}catch(e){hint.textContent='Не получилось разобрать фото. Снимите лист целиком сверху, при рассеянном свете.';}}; img.onerror=()=>{hint.textContent='Файл не открылся. Попробуйте другое фото.';}; img.src=URL.createObjectURL(f); }
   function drawSlantChart(res){
