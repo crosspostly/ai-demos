@@ -57,8 +57,11 @@
     <h2>Что видно на этой странице</h2>
     <div class="card" style="padding:12px">
       <canvas id="overlay" style="width:100%;height:auto;border-radius:10px;display:block"></canvas>
-      <p class="tiny" style="margin:8px 0 0">Фото обработано прямо в браузере — оно никуда не отправлено.</p>
-      <div class="legend"><span><i style="background:#176b55"></i>базовая линия</span><span><i style="background:#8fbfae"></i>зона высоты</span><span><i style="background:#285ab4"></i>направляющие наклона</span></div>
+      <div class="viz-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;align-items:stretch">
+        <div class="notice" style="font-size:12px;padding:10px"><b>Разметка</b><br><span style="color:#176b55">■</span> строка ровно<br><span style="color:#c97812">■</span> строка плывёт<br><span style="color:#c43c32">■</span> элемент ушёл от линии<br><span style="color:#285ab4">↗</span> направление штриха</div>
+        <canvas id="slant-chart" style="width:100%;height:110px;background:#fff;border:1px solid var(--line);border-radius:10px"></canvas>
+      </div>
+      <p class="tiny" style="margin:8px 0 0">Фото выровнено перед расчётом и обработано прямо в браузере — оно никуда не отправлено.</p>
     </div>
 
     <div class="card">
@@ -193,13 +196,21 @@
     const cb=document.getElementById('done-exercise'); if(cb) cb.addEventListener('change',()=>{localStorage.setItem('handwriting-review-exercise-done',cb.checked?'1':'0');});
   }
   function render(res){
-    current=res; const m=res.metrics; const cv=document.getElementById('overlay'); cv.width=res.displayCanvas?.width||res.canvas.width; cv.height=res.displayCanvas?.height||res.canvas.height; window.HandwritingAnalyzer.draw(res,cv);
+    current=res; const m=res.metrics; const cv=document.getElementById('overlay'); cv.width=res.displayCanvas?.width||res.canvas.width; cv.height=res.displayCanvas?.height||res.canvas.height; window.HandwritingAnalyzer.draw(res,cv); drawSlantChart(res);
     document.getElementById('score').innerHTML=res.score+'<span style="font-size:18px;color:var(--muted)">/100</span>';
     document.getElementById('rowsline').innerHTML='строк найдено: '+m.rows+'<br>элементов: '+res.core.length+'<br>наклон страницы исправлен: '+(res.pageSkewDeg||0).toFixed(1)+'°';
     put('slant',m.slant.score,'Средний наклон '+val(m.slant.deg)+'°, разброс ±'+val(m.slant.dev)+'°.'); put('parallel',m.parallel.score,'Разброс направлений ±'+val(m.parallel.dev)+'°. Эвристика.'); put('height',m.height.score,'Разброс высоты — '+val(m.height.cv*100)+'%.'); put('glyphs',m.glyphs.score,'Эвристика без распознавания букв.'); put('line',m.line.score,'Качание строки — '+(m.line.xh*100).toFixed(0)+'% высоты буквы.'); put('spacing',m.spacing.score,'Разброс видимых промежутков — '+val(m.spacing.cv*100)+'%.'); put('lines',m.lines.score,'Разброс расстояний — '+val(m.lines.cv*100)+'%.'); put('pressure',m.pressure.score,'Разброс толщины/плотности — '+val(m.pressure.cv*100)+'%. Не сила нажима.'); put('clarity',m.clarity.score,'Индекс регулярности, не процент читаемости.');
     document.getElementById('observation-list').innerHTML=''; const scores=Object.keys(metricWords).map(id=>({id,v:m[id].score})).sort((a,b)=>a.v-b.v); scores.slice(0,3).forEach((x,i)=>observation(metricWords[x.id][0],metricWords[x.id][1],String(i+1))); currentSnapshot={date:new Date().toISOString(),score:res.score,primary:scores[0].id,metrics:Object.fromEntries(Object.keys(m).filter(k=>m[k]?.score!==undefined).map(k=>[k,m[k].score]))}; makePlan(scores[0].id); saveSnapshot(); result.classList.remove('hide');
   }
   function analyseFile(f, done){ const img=new Image(); img.onload=()=>{try{done(window.HandwritingAnalyzer.analyse(img));}catch(e){hint.textContent='Не получилось разобрать фото. Снимите лист целиком сверху, при рассеянном свете.';}}; img.onerror=()=>{hint.textContent='Файл не открылся. Попробуйте другое фото.';}; img.src=URL.createObjectURL(f); }
+  function drawSlantChart(res){
+    const chart=document.getElementById('slant-chart'); chart.width=600; chart.height=220; const ctx=chart.getContext('2d'); ctx.clearRect(0,0,600,220); const bins=new Array(32).fill(0);
+    res.core.filter(c=>c.h/Math.max(1,c.w)>=1.6).forEach(c=>{const a=Math.atan2(c.w-1,c.h-1)*180/Math.PI; const i=Math.max(0,Math.min(31,Math.floor((a+40)/2.5))); bins[i]++;});
+    const max=Math.max(1,...bins), left=28, bottom=194, width=555/bins.length;
+    ctx.strokeStyle='#7d8b86'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(left,18); ctx.lineTo(left,bottom); ctx.lineTo(590,bottom); ctx.stroke();
+    ctx.fillStyle='#1d76b8'; bins.forEach((n,i)=>{const h=n/max*155; ctx.fillRect(left+i*width+1,bottom-h,Math.max(2,width-2),h);});
+    ctx.fillStyle='#66736d'; ctx.font='16px Arial'; ctx.fillText('наклон штрихов',left,16); ctx.font='12px Arial'; ctx.fillText('−40°',left,bottom+18); ctx.fillText('0°',left+width*16-6,bottom+18); ctx.fillText('+40°',560,bottom+18);
+  }
   go.addEventListener('click',()=>{if(!selectedFile)return; go.disabled=true; go.textContent='Разбираем страницу…'; analyseFile(selectedFile,res=>{render(res); go.textContent='Показать разбор'; refresh(); result.scrollIntoView({behavior:'smooth',block:'start'});});});
   const precisionToggle=document.getElementById('precision-toggle'), precisionForm=document.getElementById('precision-form'), age=document.getElementById('age'), secondFile=document.getElementById('second-file'), precisionSubmit=document.getElementById('precision-submit');
   precisionToggle.addEventListener('click',()=>{precisionForm.classList.toggle('hide'); precisionToggle.textContent=precisionForm.classList.contains('hide')?'Уточнить без регистрации':'Скрыть уточнение';});

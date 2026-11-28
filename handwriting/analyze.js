@@ -371,53 +371,51 @@
     const ctx = canvas.getContext('2d');
     ctx.drawImage(res.displayCanvas || res.canvas, 0, 0);
     const W = (res.displayCanvas || res.canvas).width, H = (res.displayCanvas || res.canvas).height;
-    ctx.font = '13px -apple-system, Arial, sans-serif';
     ctx.lineWidth = 2;
-
     const xh = res.metrics.height.mean || 20;
+    const rowError = median(res.lines.map(l => l.rmse)) || 1;
+    const unstable = l => l.rmse > Math.max(rowError * 1.45, xh * 0.13);
 
-    // строки: базовая линия и «коридор» высоты строчных
+    // Сначала строки: зелёные — стабильные, оранжевые — заметно плывут.
     for (const l of res.lines) {
-      const off = 3;              // линия под буквами, а не по ним
+      const off = 3;
       const y0 = l.b + off, y1 = l.a * W + l.b + off;
-      // коридор
-      ctx.lineWidth = 1.2;
-      ctx.strokeStyle = 'rgba(60,160,135,.55)';
+      const color = unstable(l) ? 'rgba(201,120,18,.95)' : 'rgba(23,107,85,.92)';
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = 'rgba(255,255,255,.72)';
+      ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y1); ctx.stroke();
+      ctx.lineWidth = 2.4;
+      ctx.strokeStyle = color;
+      ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y1); ctx.stroke();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = unstable(l) ? 'rgba(201,120,18,.35)' : 'rgba(23,107,85,.3)';
       ctx.setLineDash([5, 6]);
       ctx.beginPath(); ctx.moveTo(0, y0 - xh); ctx.lineTo(W, y1 - xh); ctx.stroke();
       ctx.setLineDash([]);
-      // базовая линия: белая подложка, чтобы было видно поверх линовки тетради
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = 'rgba(255,255,255,.5)';
-      ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y1); ctx.stroke();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(20,105,85,.8)';
-      ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y1); ctx.stroke();
-      // точка увода
-      ctx.fillStyle = 'rgba(31,111,92,.95)';
-      ctx.beginPath(); ctx.arc(W - 6, y1, 3, 0, 7); ctx.fill();
     }
 
-    // наклон: параллельные направляющие через весь текст
-    if (res.lines.length) {
-      const top = res.lines[0].b, bottom = res.lines[res.lines.length - 1].b;
-      const mid = (top + bottom) / 2;
-      const ang = (res.metrics.slant.deg || 0) * Math.PI / 180;
-      const dx = Math.tan(ang);
-      ctx.strokeStyle = 'rgba(40,90,180,.9)';
-      ctx.setLineDash([9, 7]);
-      ctx.lineWidth = 2.5;
-      for (let k = -2; k <= 2; k++) {
-        const x = W * 0.12 + k * W * 0.19;
-        ctx.beginPath();
-        ctx.moveTo(x, mid - (H * 0.33) - dx * (x - W / 2));
-        ctx.lineTo(x, mid + (H * 0.33) - dx * (x - W / 2));
-        ctx.stroke();
-      }
-      ctx.setLineDash([]);
-      ctx.lineWidth = 2;
-      ctx.fillStyle = 'rgba(40,90,180,.95)';
-      ctx.fillText('наклон ' + Math.round(res.metrics.slant.deg) + '°', 8, H - 10);
+    // Красным отмечаем только действительно удалённые от типичного размера элементы.
+    ctx.strokeStyle = 'rgba(196,60,50,.95)';
+    ctx.fillStyle = 'rgba(196,60,50,.12)';
+    ctx.lineWidth = 2;
+    for (const c of res.outliers) {
+      ctx.fillRect(c.minx - 2, c.miny - 2, c.w + 4, c.h + 4);
+      ctx.strokeRect(c.minx - 2, c.miny - 2, c.w + 4, c.h + 4);
+    }
+
+    // Синие стрелки идут через каждый достаточно вытянутый видимый штрих.
+    ctx.strokeStyle = 'rgba(40,90,180,.9)';
+    ctx.fillStyle = 'rgba(40,90,180,.95)';
+    ctx.lineWidth = 1.6;
+    for (const c of res.core) {
+      if (c.h / Math.max(1, c.w) < 1.6) continue;
+      const angle = Math.atan2(c.w - 1, c.h - 1);
+      const len = Math.max(7, Math.min(22, c.h * 0.42));
+      const x = c.cx, y = c.cy + len * 0.45;
+      const tx = x + Math.sin(angle) * len, ty = y - Math.cos(angle) * len;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(tx, ty); ctx.stroke();
+      const ah = 4, a = Math.atan2(ty - y, tx - x);
+      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx - ah * Math.cos(a - .55), ty - ah * Math.sin(a - .55)); ctx.lineTo(tx - ah * Math.cos(a + .55), ty - ah * Math.sin(a + .55)); ctx.closePath(); ctx.fill();
     }
     return canvas;
   }
