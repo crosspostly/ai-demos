@@ -432,28 +432,22 @@
       ctx.setLineDash([]);
     }
 
-    // Красным отмечаем только действительно удалённые от типичного размера элементы.
-    ctx.strokeStyle = 'rgba(196,60,50,.95)';
-    ctx.fillStyle = 'rgba(196,60,50,.12)';
-    ctx.lineWidth = 2;
-    for (const c of res.outliers) {
-      ctx.fillRect(c.minx - 2, c.miny - 2, c.w + 4, c.h + 4);
-      ctx.strokeRect(c.minx - 2, c.miny - 2, c.w + 4, c.h + 4);
-    }
-
-    // Синие стрелки идут через каждый достаточно вытянутый видимый штрих.
-    ctx.strokeStyle = 'rgba(40,90,180,.9)';
-    ctx.fillStyle = 'rgba(40,90,180,.95)';
-    ctx.lineWidth = 1.6;
+    // Стрелки ставятся на сам элемент, как в example2. Выбившийся элемент
+    // получает красную стрелку и тонкую красную отметку, остальные — синюю.
     for (const c of res.core) {
-      if (c.h / Math.max(1, c.w) < 1.6) continue;
+      if (c.h / Math.max(1, c.w) < 1.25) continue;
       const angle = Math.atan2(c.w - 1, c.h - 1);
-      const len = Math.max(7, Math.min(22, c.h * 0.42));
-      const x = c.cx, y = c.cy + len * 0.45;
-      const tx = x + Math.sin(angle) * len, ty = y - Math.cos(angle) * len;
+      const len = Math.max(12, Math.min(34, c.h * 0.72));
+      const x = c.cx, y = c.cy + len * 0.42;
+      const tx = x + Math.sin(angle) * len * 0.55, ty = y - Math.cos(angle) * len;
+      const bad = res.outliers.includes(c);
+      ctx.strokeStyle = bad ? 'rgba(196,60,50,.95)' : 'rgba(40,120,190,.95)';
+      ctx.fillStyle = bad ? 'rgba(196,60,50,.95)' : 'rgba(40,120,190,.95)';
+      ctx.lineWidth = bad ? 2.2 : 1.8;
       ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(tx, ty); ctx.stroke();
       const ah = 4, a = Math.atan2(ty - y, tx - x);
       ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx - ah * Math.cos(a - .55), ty - ah * Math.sin(a - .55)); ctx.lineTo(tx - ah * Math.cos(a + .55), ty - ah * Math.sin(a + .55)); ctx.closePath(); ctx.fill();
+      if (bad) { ctx.fillRect(c.cx - 1.5, c.miny, 3, c.h); }
     }
     return canvas;
   }
