@@ -414,40 +414,44 @@
     const rowError = median(res.lines.map(l => l.rmse)) || 1;
     const unstable = l => res.unstableLines ? res.unstableLines.includes(l) : l.rmse > Math.max(rowError * 1.45, xh * 0.13);
 
-    // Сначала строки: зелёные — стабильные, оранжевые — заметно плывут.
+    // Сначала строки: одна яркая линия на каждую строку, как в эталонной демке.
+    // Не добавляем второй пунктир: он визуально конкурировал с настоящей строкой.
     for (const l of res.lines) {
       const off = 3;
       const y0 = l.b + off, y1 = l.a * W + l.b + off;
-      const color = unstable(l) ? 'rgba(201,120,18,.95)' : 'rgba(23,107,85,.92)';
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = 'rgba(255,255,255,.72)';
-      ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y1); ctx.stroke();
-      ctx.lineWidth = 2.4;
+      const color = unstable(l) ? 'rgba(231,145,38,.96)' : 'rgba(65,181,76,.96)';
+      ctx.lineWidth = Math.max(2.4, Math.min(4, xh * 0.10));
       ctx.strokeStyle = color;
       ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y1); ctx.stroke();
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = unstable(l) ? 'rgba(201,120,18,.35)' : 'rgba(23,107,85,.3)';
-      ctx.setLineDash([5, 6]);
-      ctx.beginPath(); ctx.moveTo(0, y0 - xh); ctx.lineTo(W, y1 - xh); ctx.stroke();
-      ctx.setLineDash([]);
     }
 
-    // Стрелки ставятся на сам элемент, как в example2. Выбившийся элемент
-    // получает красную стрелку и тонкую красную отметку, остальные — синюю.
-    for (const c of res.core) {
-      if (c.h / Math.max(1, c.w) < 1.25) continue;
-      const angle = Math.atan2(c.w - 1, c.h - 1);
-      const len = Math.max(12, Math.min(34, c.h * 0.72));
-      const x = c.cx, y = c.cy + len * 0.42;
-      const tx = x + Math.sin(angle) * len * 0.55, ty = y - Math.cos(angle) * len;
-      const bad = res.outliers.includes(c);
-      ctx.strokeStyle = bad ? 'rgba(196,60,50,.95)' : 'rgba(40,120,190,.95)';
-      ctx.fillStyle = bad ? 'rgba(196,60,50,.95)' : 'rgba(40,120,190,.95)';
-      ctx.lineWidth = bad ? 2.2 : 1.8;
+    // Стрелки ставятся на реальные компоненты, но прореживаются по X внутри
+    // строки: получается плотная разметка штрихов, а не россыпь стрелок в шуме.
+    const arrowCandidates = res.core
+      .filter(c => c.h >= Math.max(7, xh * 0.58) && c.n >= 20)
+      .sort((a, b) => a.cy - b.cy || a.minx - b.minx);
+    const arrowItems = [];
+    for (const c of arrowCandidates) {
+      const near = arrowItems.find(p => Math.abs(p.cy - c.cy) < xh * 0.95 && Math.abs(p.cx - c.cx) < Math.max(16, xh * 0.9));
+      if (!near) arrowItems.push(c);
+    }
+    for (const c of arrowItems) {
+      const len = Math.max(12, Math.min(30, c.h * 0.62));
+      const x = c.cx, y = Math.min(c.maxy + len * 0.20, c.miny + c.h * 0.90);
+      const tilt = Math.max(-8, Math.min(8, (c.w - c.h) * 0.10));
+      const tx = x + tilt, ty = y - len;
+      ctx.strokeStyle = 'rgba(20,132,199,.96)';
+      ctx.fillStyle = 'rgba(20,132,199,.96)';
+      ctx.lineWidth = 1.8;
       ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(tx, ty); ctx.stroke();
       const ah = 4, a = Math.atan2(ty - y, tx - x);
       ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx - ah * Math.cos(a - .55), ty - ah * Math.sin(a - .55)); ctx.lineTo(tx - ah * Math.cos(a + .55), ty - ah * Math.sin(a + .55)); ctx.closePath(); ctx.fill();
-      if (bad) { ctx.fillRect(c.cx - 1.5, c.miny, 3, c.h); }
+    }
+
+    // Красная отметка остаётся отдельной сущностью и объясняет именно выброс.
+    for (const c of res.outliers) {
+      ctx.fillStyle = 'rgba(196,60,50,.96)';
+      ctx.fillRect(c.cx - 1.6, c.miny, 3.2, c.h);
     }
     return canvas;
   }
