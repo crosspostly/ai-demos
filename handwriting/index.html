@@ -117,6 +117,30 @@
       <button class="btn ghost" id="save-result">Сохранить результат</button>
       <div class="tiny" style="margin-top:8px" id="save-note"></div>
     </div>
+
+    <div class="card" id="teacher-card">
+      <span class="pill">Если нужна помощь человека</span>
+      <h3 style="margin-top:9px">Подобрать проверенного преподавателя</h3>
+      <p class="tiny">Оставьте короткую заявку. Мы вручную подберём подходящего специалиста или скажем, если достаточно домашних упражнений.</p>
+      <button class="btn ghost" id="teacher-toggle">Оставить заявку без регистрации</button>
+      <div id="teacher-form" class="hide" style="margin-top:12px">
+        <label class="tiny" for="teacher-age">Возраст ребёнка</label>
+        <select id="teacher-age" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin:5px 0 10px;font:inherit">
+          <option value="">Выберите возраст</option><option>5–6 лет</option><option>7–8 лет</option><option>9–10 лет</option><option>11–12 лет</option><option>13 лет и старше</option>
+        </select>
+        <label class="tiny" for="teacher-format">Как удобнее заниматься?</label>
+        <select id="teacher-format" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin:5px 0 10px;font:inherit">
+          <option value="">Выберите формат</option><option>Онлайн</option><option>Очно</option><option>Не знаю, посоветуйте</option>
+        </select>
+        <label class="tiny" for="teacher-goal">Что хочется улучшить?</label>
+        <textarea id="teacher-goal" rows="3" placeholder="Например: строки уезжают вниз, буквы разного размера" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin:5px 0 10px;font:inherit;resize:vertical"></textarea>
+        <label class="tiny" for="teacher-contact">Куда ответить?</label>
+        <input id="teacher-contact" type="text" placeholder="Телефон, Telegram или e-mail" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin:5px 0 10px;font:inherit">
+        <label class="tiny" style="display:flex;gap:8px;align-items:flex-start"><input id="teacher-consent" type="checkbox" style="margin-top:3px"><span>Согласен на ручную обработку этой заявки для подбора преподавателя.</span></label>
+        <button class="btn" id="teacher-submit" disabled style="margin-top:10px">Подготовить заявку</button>
+        <div class="tiny" id="teacher-note" style="margin-top:8px"></div>
+      </div>
+    </div>
     <button class="btn ghost" id="share">Поделиться результатом</button>
     <button class="btn ghost" id="clear" style="margin-top:10px">Удалить фото из этого разбора</button>
   </div>
@@ -183,6 +207,11 @@
   age.addEventListener('change',refreshPrecision); secondFile.addEventListener('change',refreshPrecision);
   precisionSubmit.addEventListener('click',()=>{if(!current||!secondFile.files[0])return; precisionSubmit.disabled=true; precisionSubmit.textContent='Сравниваем…'; analyseFile(secondFile.files[0],res=>{const key=currentSnapshot.primary, before=currentSnapshot.metrics[key], after=res.metrics[key].score, diff=after-before; document.getElementById('precision-note').textContent='Возраст сохранён только в этом браузере; он не превращает результат в возрастную норму.'; const cmp=document.getElementById('comparison'); cmp.classList.remove('hide'); cmp.innerHTML='<b>'+metricWords[key][0]+': было '+before+', стало '+after+'</b><br><span class="tiny">'+(diff>=0?'Показатель вырос на ':'Показатель снизился на ')+Math.abs(diff)+' пунктов. Сравнение корректно только для похожих страниц и условий съёмки.</span>'; precisionSubmit.textContent='Сравнение готово';});});
   document.getElementById('save-result').addEventListener('click',saveSnapshot);
+  const teacherToggle=document.getElementById('teacher-toggle'), teacherForm=document.getElementById('teacher-form'), teacherAge=document.getElementById('teacher-age'), teacherFormat=document.getElementById('teacher-format'), teacherGoal=document.getElementById('teacher-goal'), teacherContact=document.getElementById('teacher-contact'), teacherConsent=document.getElementById('teacher-consent'), teacherSubmit=document.getElementById('teacher-submit');
+  teacherToggle.addEventListener('click',()=>{teacherForm.classList.toggle('hide'); teacherToggle.textContent=teacherForm.classList.contains('hide')?'Оставить заявку без регистрации':'Скрыть форму';});
+  function refreshTeacher(){teacherSubmit.disabled=!(teacherAge.value&&teacherFormat.value&&teacherGoal.value.trim()&&teacherContact.value.trim()&&teacherConsent.checked);}
+  [teacherAge,teacherFormat,teacherGoal,teacherContact,teacherConsent].forEach(el=>el.addEventListener('input',refreshTeacher));
+  teacherSubmit.addEventListener('click',async()=>{const text='Заявка на подбор преподавателя\nВозраст: '+teacherAge.value+'\nФормат: '+teacherFormat.value+'\nЧто улучшить: '+teacherGoal.value.trim()+'\nКонтакт для ответа: '+teacherContact.value.trim()+(currentSnapshot?'\nИндекс регулярности: '+currentSnapshot.score:''); try{if(navigator.share){await navigator.share({title:'Заявка на подбор преподавателя',text});}else{await navigator.clipboard.writeText(text);} teacherSubmit.textContent='Заявка подготовлена'; document.getElementById('teacher-note').textContent=navigator.share?'Отправьте её в удобный чат или почту — заявку обработает человек.':'Текст заявки скопирован. Вставьте его в удобный чат или почту.';}catch(e){document.getElementById('teacher-note').textContent='Не удалось открыть отправку. Скопируйте данные вручную или попробуйте ещё раз.';}});
   document.getElementById('share').addEventListener('click',async()=>{const text='Разбор почерка ребёнка: одна зона роста и короткое упражнение';if(navigator.share){try{await navigator.share({title:text,text});return;}catch(e){}}try{await navigator.clipboard.writeText(location.href);document.getElementById('save-note').textContent='Ссылка скопирована.';}catch(e){}});
   document.getElementById('clear').addEventListener('click',()=>{selectedFile=null;file.value='';quality.classList.add('hide');result.classList.add('hide');current=null;refresh();window.scrollTo({top:0,behavior:'smooth'});});
   const saved=getSaved(); if(saved) hint.textContent='На этом телефоне уже есть прошлый результат. Можно загрузить новую страницу для сравнения.'; refresh();
