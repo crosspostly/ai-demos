@@ -259,10 +259,35 @@
     return out;
   }
 
+  function contentBounds(mask, w, h) {
+    const comps = components(mask, w, h).filter(c => c.n >= 20 && c.h >= 5);
+    if (!comps.length) return null;
+    const left = Math.min(...comps.map(c => c.minx)), top = Math.min(...comps.map(c => c.miny));
+    const right = Math.max(...comps.map(c => c.maxx)), bottom = Math.max(...comps.map(c => c.maxy));
+    const pad = Math.max(14, Math.round(Math.min(w, h) * 0.025));
+    const x = Math.max(0, left - pad), y = Math.max(0, top - pad);
+    const r = Math.min(w - 1, right + pad), b = Math.min(h - 1, bottom + pad);
+    if ((r - x) < w * 0.35 || (b - y) < h * 0.25) return null;
+    return { x, y, width: r - x + 1, height: b - y + 1 };
+  }
+
+  function cropCanvas(canvas, box) {
+    if (!box) return canvas;
+    const out = document.createElement('canvas'); out.width = box.width; out.height = box.height;
+    out.getContext('2d').drawImage(canvas, box.x, box.y, box.width, box.height, 0, 0, box.width, box.height);
+    return out;
+  }
+
   function analyse(img) {
-    const canvas = toCanvas(img, MAX_W);
-    const { g, w, h } = gray(canvas);
-    const rawMask = inkMask(g, w, h);
+    let canvas = toCanvas(img, MAX_W);
+    let { g, w, h } = gray(canvas);
+    let rawMask = inkMask(g, w, h);
+    const cropBox = contentBounds(rawMask, w, h);
+    if (cropBox) {
+      canvas = cropCanvas(canvas, cropBox);
+      ({ g, w, h } = gray(canvas));
+      rawMask = inkMask(g, w, h);
+    }
     let comps = components(rawMask, w, h);
     const heightsAll = comps.map(c => c.h).filter(v => v >= 6);
     const medAll = median(heightsAll);
@@ -319,6 +344,9 @@
 
     const wobble = lines.length ? median(lines.map(l => l.rmse)) : 0;
     const wobbleXh = meanH ? wobble / meanH : 0;
+    const rowError = median(lines.map(l => l.rmse)) || 1;
+    const unstable = l => l.rmse > Math.max(rowError * 1.45, meanH * 0.13);
+    const unstableLines = lines.filter(unstable);
 
     // Дополнительные метрики — геометрические эвристики по тому же снимку.
     // Они не являются распознаванием букв, клинической оценкой или измерением силы нажима.
@@ -341,6 +369,9 @@
     const shapeValues = core.map(c => c.w / Math.max(1, c.h));
     const shapeCv = robustCoefficient(shapeValues);
 
+    // Эти же сущности рисуются на фотографии: красные элементы и оранжевые строки.
+    const outliers = core.filter(c => c.h < meanH * 0.6 || c.h > meanH * 1.55).slice(0, 24);
+
     const sParallel = Math.max(0, Math.min(100, 100 - Math.max(0, slantDev - 1.5) * 7.2));
     const sSpacing = Math.max(0, Math.min(100, 100 - Math.max(0, gapCv - 0.22) * 85));
     const sLines = Math.max(0, Math.min(100, 100 - Math.max(0, lineGapCv - 0.08) * 170));
@@ -349,16 +380,15 @@
     const sClarity = Math.max(0, Math.min(100, sGlyphs * 0.55 + sPressure * 0.25 + (100 - Math.min(100, wobbleXh * 300)) * 0.2));
 
     // счёт 0..100
-    const sHeight = Math.max(0, Math.min(100, 100 - Math.max(0, cvH - 0.18) * 160));
+    const outlierShare = core.length ? outliers.length / core.length : 0;
+    const sHeight = Math.max(20, Math.min(100, 100 - outlierShare * 160));
     const sSlant = Math.max(0, Math.min(100, 100 - Math.max(0, slantDev - 1.5) * 6.5));
-    const sLine = Math.max(0, Math.min(100, 100 - Math.max(0, wobbleXh - 0.08) * 110));
+    const sLine = lines.length ? Math.max(20, Math.round(100 - unstableLines.length / lines.length * 100)) : 20;
     const score = Math.round((sHeight * 0.18 + sSlant * 0.14 + sParallel * 0.10 + sGlyphs * 0.10 + sLine * 0.16 + sSpacing * 0.10 + sLines * 0.08 + sPressure * 0.06 + sClarity * 0.08));
 
-    // выбросы по высоте — их и обводим
-    const outliers = core.filter(c => c.h < meanH * 0.6 || c.h > meanH * 1.55).slice(0, 24);
-
     return {
-      canvas, displayCanvas, comps, core, lines, outliers, score, rowsRaw: rows.length,
+      canvas, displayCanvas, comps, core, lines, outliers, unstableLines, score, rowsRaw: rows.length,
+      crop: cropBox ? { left: cropBox.x, top: cropBox.y, width: cropBox.width, height: cropBox.height } : null,
       pageSkewDeg: Math.round(Math.atan(pageSkew) * 180 / Math.PI * 10) / 10,
       metrics: {
         height: { score: Math.round(sHeight), cv: cvH, mean: meanH },
@@ -382,7 +412,7 @@
     ctx.lineWidth = 2;
     const xh = res.metrics.height.mean || 20;
     const rowError = median(res.lines.map(l => l.rmse)) || 1;
-    const unstable = l => l.rmse > Math.max(rowError * 1.45, xh * 0.13);
+    const unstable = l => res.unstableLines ? res.unstableLines.includes(l) : l.rmse > Math.max(rowError * 1.45, xh * 0.13);
 
     // Сначала строки: зелёные — стабильные, оранжевые — заметно плывут.
     for (const l of res.lines) {
